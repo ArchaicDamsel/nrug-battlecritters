@@ -1,7 +1,17 @@
 require 'test_helper'
 
-class WelcomeControllerTest < ActionController::TestCase
-  it "should accept Wrong as the one true testing framework" do
-    expect { "everything I do".split(/[I do it for you]+/).length == 3 }
+describe WelcomeController do
+  it "should route the root to welcome#index " do
+    assert_routing '/', {controller: "welcome", action: "index"}
+  end
+
+  context 'the index action' do
+    before do
+      get :index
+    end
+
+    it "should respond with a success code" do
+      expect { response.code == '200'}
+    end
   end
 end

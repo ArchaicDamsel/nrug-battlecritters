@@ -10,6 +10,11 @@ class ActiveSupport::TestCase
   include Wrong
   ActiveRecord::Migration.check_pending!
 
+
+  class << self
+    alias_method :context, :describe
+  end
+
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   #
   # Note: You'll currently still have to declare fixtures explicitly in integration tests

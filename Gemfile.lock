@@ -53,6 +53,8 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.25)
     minitest (4.7.5)
+    minitest-colorize (0.0.5)
+      minitest (>= 2.0)
     minitest-spec-rails (4.7.4)
       minitest (~> 4.7)
       rails (<= 4.0)
@@ -133,6 +135,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   jbuilder (~> 1.2)
   jquery-rails
+  minitest-colorize
   minitest-spec-rails
   rails (= 4.0.0)
   sass-rails (~> 4.0.0)

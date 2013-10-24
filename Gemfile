@@ -34,6 +34,7 @@ end
 
 group :test do
   gem 'minitest-spec-rails'
+  gem 'minitest-colorize'
   gem 'wrong'
 end
 
