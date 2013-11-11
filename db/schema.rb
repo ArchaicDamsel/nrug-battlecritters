@@ -11,6 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20131110224751) do
+
+  create_table "messages", force: true do |t|
+    t.boolean  "outgoing"
+    t.string   "path"
+    t.text     "inspected_data"
+    t.integer  "server_id"
+    t.integer  "in_response_to_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "messages", ["in_response_to_id"], name: "index_messages_on_in_response_to_id"
+  add_index "messages", ["server_id"], name: "index_messages_on_server_id"
+
+  create_table "servers", force: true do |t|
+    t.string   "hostname"
+    t.string   "current_role"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

@@ -1,3 +1,21 @@
-// Place all the styles related to the welcome controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+.welcomes_controller {
+	.welcome {
+		text-align: center;
+		padding-top: 300px;
+	}
+
+	.welcome a {
+		display: inline-block;
+		color: #3b4664;
+		text-decoration: none;
+		background-color: #cfdde9;
+		padding: 10px;
+		border-radius: 5px;
+		margin: 0 20px;
+		border: 6px solid #3b4664;
+
+		&:hover {
+			border-color: #709eb4;
+		}
+	}
+}

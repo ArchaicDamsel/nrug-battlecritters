@@ -1,0 +1,5 @@
+<div class="welcome">
+	<h3>What role has this installation got?</h3>
+	<%= link_to "I'm a player", new_welcome_path(:server => {:current_role => :player }) %>
+	<%= link_to "I'm the server", new_welcome_path(:server => {:current_role => :server }) %>
+</div>

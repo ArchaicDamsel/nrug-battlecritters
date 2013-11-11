@@ -36,6 +36,8 @@ group :test do
   gem 'minitest-spec-rails'
   gem 'minitest-colorize'
   gem 'wrong'
+  gem 'mocha', require: false
+  gem 'webmock', require: 'webmock/minitest'
 end
 
 # Use ActiveModel has_secure_password

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  outgoing: false
+  path: MyString
+  inspected_data: MyText
+  server_id: 
+  in_response_to_id: 
+
+two:
+  outgoing: false
+  path: MyString
+  inspected_data: MyText
+  server_id: 
+  in_response_to_id: 
