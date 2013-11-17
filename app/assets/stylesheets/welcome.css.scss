@@ -1,3 +1,18 @@
+@mixin button {
+	display: inline-block;
+	color: #3b4664;
+	text-decoration: none;
+	background-color: #cfdde9;
+	padding: 10px;
+	border-radius: 5px;
+	margin: 0 20px;
+	border: 6px solid #3b4664;
+
+	&:hover {
+		border-color: #709eb4;
+	}
+}
+
 .welcomes_controller {
 	.welcome {
 		text-align: center;
@@ -5,17 +20,10 @@
 	}
 
 	.welcome a {
-		display: inline-block;
-		color: #3b4664;
-		text-decoration: none;
-		background-color: #cfdde9;
-		padding: 10px;
-		border-radius: 5px;
-		margin: 0 20px;
-		border: 6px solid #3b4664;
-
-		&:hover {
-			border-color: #709eb4;
-		}
+		@include button;
 	}
+}
+
+form {
+	margin-bottom: 100px;
 }

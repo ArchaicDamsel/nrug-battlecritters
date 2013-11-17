@@ -56,5 +56,18 @@ Nrug::Application.routes.draw do
   #     # Directs /admin/products/* to Admin::ProductsController
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
-  #   end
+  #   end  
+
+    namespace :server_api do
+      # Directs /admin/products/* to Admin::ProductsController
+      # (app/controllers/admin/products_controller.rb)
+      resources :games
+      resources :boards
+    end
+
+    namespace :player_api do
+      # Directs /admin/products/* to Admin::ProductsController
+      # (app/controllers/admin/products_controller.rb)
+      resources :boards
+    end
 end
