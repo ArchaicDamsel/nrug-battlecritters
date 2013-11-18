@@ -1,11 +1,11 @@
 class WelcomesController < ApplicationController
   # Root URL - let me choose whether to be a player or server
   def index
-    
+
   end
 
   # Warning: This is an ABUSE of restful routing.
-  # I'm a player or server ; 
+  # I'm a player or server ;
   # Players: show me a list of servers to connect to (or let me input a new one)
   # Servers: wait for connections
   def new
@@ -20,12 +20,12 @@ class WelcomesController < ApplicationController
       old_server.update_attribute :current_role, ''
     end
 
-    Server.find_or_create_by(:hostname => params[:server][:hostname]).update_attribute :current_role, 'server'
+    Server.make_main(params[:server][:hostname])
     redirect_to welcome_path
   end
 
   def show
-    
+
   end
 
 
@@ -37,6 +37,7 @@ class WelcomesController < ApplicationController
     @role = params[:server][:current_role]
     if @role == 'server'
       # Reset everything!
+      Board.delete_all
       Server.all.each do |old_server|
         old_server.update_attribute :current_role, ''
       end
