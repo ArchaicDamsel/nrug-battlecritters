@@ -3,8 +3,8 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .boards_controller {
 	table.board {
-		width: 800px;
-		height: 800px;
+		width: 300px;
+		height: 300px;
 		background-color: #005544;
 		border: black 5px solid;
 		margin: 100px auto;
@@ -20,10 +20,54 @@
 
 	.moon {
 		left: auto;
-		right: 100px;
+		right: 50px;
+		width: 150px;
 	}
 
 	td {
 		border: solid black 5px;
+		text-align: center;
+	}
+
+	.fox { 
+		width: 200px;
+	}
+
+	.badger {
+		width: 200px;
+	}
+}
+
+@media all and (min-width: 1500px){
+	.boards_controller {
+		table.board {
+		width: 700px;
+		height: 700px;
+
+		}
+
+		.moon {
+			left: auto;
+			right: 30px;
+		}
+
+		.fox { 
+			width: 250px;
+			z-index: 10;
+		}
+
+		.badger {
+			width: 250px;
+			z-index: 10;
+		}
+
+		#fox_board {
+			float: right;
+			margin-right: 200px;
+		}
+		#badger_board {
+			float: left;
+			margin-left: 200px;
+		}
 	}
 }
