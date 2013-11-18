@@ -1,8 +1,19 @@
-<table class="board">
-	<%(0..9).each do |row_number|%>
+<table class="board" id="fox_board">
+	<%(0..7).each do |row_number|%>
 		<tr>
-		<%(0..9).each do |column_number|%>
-			<td></td>
+		<%(0..7).each do |column_number|%>
+			<td><%= ['', image_tag('boardfox.png'), image_tag('hitfox.png'),image_tag('badgershot.png')].sample %></td>
+		<% end %>
+		</tr>
+	<% end %>
+
+</table>
+
+<table class="board" id="badger_board">
+	<%(0..7).each do |row_number|%>
+		<tr>
+		<%(0..7).each do |column_number|%>
+			<td><%= ['', image_tag('boardbadger.png'), image_tag('hitbadger.png'), image_tag('foxshot.png')].sample %></td>
 		<% end %>
 		</tr>
 	<% end %>
