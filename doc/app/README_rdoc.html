@@ -59,15 +59,11 @@
 
   <ul class="link-list">
   
-    <li><a href="./ServerApi.html">ServerApi</a>
+    <li><a href="./Board.html">Board</a>
   
-    <li><a href="./ServerApi/BoardsController.html">ServerApi::BoardsController</a>
+    <li><a href="./Board/LayoutError.html">Board::LayoutError</a>
   
-    <li><a href="./ServerApi/GamesController.html">ServerApi::GamesController</a>
-  
-    <li><a href="./PlayerApi.html">PlayerApi</a>
-  
-    <li><a href="./PlayerApi/GamesController.html">PlayerApi::GamesController</a>
+    <li><a href="./ApisController.html">ApisController</a>
   
     <li><a href="./ApplicationController.html">ApplicationController</a>
   
@@ -78,6 +74,8 @@
     <li><a href="./BoardsController.html">BoardsController</a>
   
     <li><a href="./Message.html">Message</a>
+  
+    <li><a href="./Player.html">Player</a>
   
     <li><a href="./Server.html">Server</a>
   
@@ -131,17 +129,25 @@ following JSON:</p>
 placed, and that no pieces overlap. If you fail to do this, the server will
 reject your request and the other team will win by default</strong></p>
 
+<p><strong>Note: both vertical and horizontal arrays must be defined, but may
+be empty.</strong></p>
+
 <p>You can send your list of positions with the following request:</p>
 
 <pre>POST /api</pre>
 
-<p>The request needs to post the following form data in JSON format:</p>
+<p>The request needs to post the following params:</p>
 
-<pre>positions = 
-        &#39;{
-                &quot;vertical&quot;: [[piece, x, y], [piece, x, y], ...], 
-                &quot;horizontal&quot;: [[piece, x, y], [piece, x, y], ...]
-        }&#39;</pre>
+<pre class="ruby">{ 
+        :<span class="ruby-identifier">animal</span> =<span class="ruby-operator">&gt;</span> :<span class="ruby-identifier">my_animal</span>,
+        :<span class="ruby-identifier">positions</span> =<span class="ruby-operator">&gt;</span>
+                {
+                        <span class="ruby-string">&quot;vertical&quot;</span><span class="ruby-operator">:</span> [[<span class="ruby-identifier">piece</span>, <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>], [<span class="ruby-identifier">piece</span>, <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>], <span class="ruby-operator">...</span>], 
+                        <span class="ruby-string">&quot;horizontal&quot;</span><span class="ruby-operator">:</span> [[<span class="ruby-identifier">piece</span>, <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>], [<span class="ruby-identifier">piece</span>, <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>], <span class="ruby-operator">...</span>]
+                }
+        }
+}
+</pre>
 
 <p>… where `piece` is a number 1 to 5 according to its size (for example,
 piece number five is the largest piece on the board spanning five squares).</p>
@@ -153,6 +159,12 @@ piece number five is the largest piece on the board spanning five squares).</p>
 <p>500 - Error - probably because of overlapping pieces, or not all pieces
 being placed. Don&#39;t bother making any more requests - you&#39;ve lost.</p>
 </li></ul>
+
+<p>Place your pieces wisely and the result will be JSON such as:</p>
+
+<pre>{
+        &quot;result&quot;: &quot;Success: You are ready to play!&quot;
+}</pre>
 
 <h3 id="label-Explaination">Explaination</h3>
 
@@ -214,15 +226,6 @@ s       ---------------------------------
 (2,5).</p>
 </li></ul>
 
-<p>These arrays can be easily be written in ruby and converted to json using
-the .to_json method as follows:</p>
-
-<pre class="ruby">{
-        :<span class="ruby-identifier">vertical</span> =<span class="ruby-operator">&gt;</span> [[<span class="ruby-identifier">piece</span>, <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>], [<span class="ruby-identifier">piece</span>, <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>], <span class="ruby-operator">...</span>], 
-        :<span class="ruby-identifier">horizontal</span> =<span class="ruby-operator">&gt;</span> [[<span class="ruby-identifier">piece</span>, <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>], [<span class="ruby-identifier">piece</span>, <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>], <span class="ruby-operator">...</span>]
-}.<span class="ruby-identifier">to_json</span>
-</pre>
-
 <h3 id="label-Shooting">Shooting</h3>
 
 <p>A JSON array containing your shooting co-ordinates for each shot is
@@ -234,11 +237,13 @@ required.</p>
 
 <p>Your code should produce an infinite string of co-ordinates for each shot
 of your game strategy. Each shot should be sent to the server singularly in
-a JSON array as follows:</p>
+params as follows:</p>
 
-<pre>{
-        &quot;shot&quot;: [x, y]
-}</pre>
+<pre class="ruby">{
+        :<span class="ruby-identifier">animal</span> =<span class="ruby-operator">&gt;</span> :<span class="ruby-identifier">my_animal</span>,
+        :<span class="ruby-identifier">shot</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>]
+}
+</pre>
 
 <p>As above X and Y are the the co-ordinates and refer to the squares on the
 board.</p>
@@ -247,15 +252,8 @@ board.</p>
 <ul><li>
 <p>200 - Successful shot</p>
 </li><li>
-<p>500 - Error - probably because you&#39;ve already lost.</p>
+<p>500 - Error - probably because you&#39;ve already lost or won.</p>
 </li></ul>
-
-<p>This also can be created using the .to_json method using ruby:</p>
-
-<pre class="ruby">{
-        :<span class="ruby-identifier">shot</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>]
-}.<span class="ruby-identifier">to_json</span>
-</pre>
 
 <p>The response from the server should be as follows:</p>
 
@@ -271,9 +269,17 @@ opponent</p>
 <p>hit - you hit an enemy&#39;s home. There they were, eating dinner, a
 massive missile crashed through their roof. I hope you&#39;re proud.</p>
 </li><li>
-<p>destroy - you have sunk their battleship. Erm, I mean destroyed the enemy
-target.</p>
+<p>win - you win! Take home a cuddly toy.</p>
+</li><li>
+<p>lose - sorry, you lost.</p>
 </li></ul>
+
+<p>#* destroy - you have sunk their battleship. Erm, I mean destroyed the
+enemy target.</p>
+
+<p>Note: There is currently no indication whether you “sunk” their
+“battleship”. You will have to explore all the edges of an enemy to be
+sure.</p>
 
 <p>Once all oppositions pieces have been destroyed the server will return the
 winner.</p>
@@ -297,6 +303,12 @@ so your milage may vary.</p>
 <p>I would tell you a kitten dies for every untested line of code, but
 you&#39;re the kind of person to murder badgers in their sleep, so I doubt
 that would do much.</p>
+<ul><li>
+<p>There&#39;s a piece with size of 1 - WTF?!?</p>
+</li></ul>
+
+<p>Hah! Well, some animals prefer the solitary life. And we&#39;re sadistic.
+Go figure.</p>
 
 </div>
 

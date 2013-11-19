@@ -99,15 +99,11 @@
 
   <ul class="link-list">
   
-    <li><a href="./ServerApi.html">ServerApi</a>
+    <li><a href="./Board.html">Board</a>
   
-    <li><a href="./ServerApi/BoardsController.html">ServerApi::BoardsController</a>
+    <li><a href="./Board/LayoutError.html">Board::LayoutError</a>
   
-    <li><a href="./ServerApi/GamesController.html">ServerApi::GamesController</a>
-  
-    <li><a href="./PlayerApi.html">PlayerApi</a>
-  
-    <li><a href="./PlayerApi/GamesController.html">PlayerApi::GamesController</a>
+    <li><a href="./ApisController.html">ApisController</a>
   
     <li><a href="./ApplicationController.html">ApplicationController</a>
   
@@ -118,6 +114,8 @@
     <li><a href="./BoardsController.html">BoardsController</a>
   
     <li><a href="./Message.html">Message</a>
+  
+    <li><a href="./Player.html">Player</a>
   
     <li><a href="./Server.html">Server</a>
   
@@ -178,7 +176,7 @@
     <span class="ruby-identifier">old_server</span>.<span class="ruby-identifier">update_attribute</span> <span class="ruby-value">:current_role</span>, <span class="ruby-string">&#39;&#39;</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-constant">Server</span>.<span class="ruby-identifier">find_or_create_by</span>(<span class="ruby-value">:hostname</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:server</span>][<span class="ruby-value">:hostname</span>]).<span class="ruby-identifier">update_attribute</span> <span class="ruby-value">:current_role</span>, <span class="ruby-string">&#39;server&#39;</span>
+  <span class="ruby-constant">Server</span>.<span class="ruby-identifier">make_main</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:server</span>][<span class="ruby-value">:hostname</span>])
   <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">welcome_path</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- create-source -->
@@ -209,7 +207,7 @@
           <div class="method-source-code" id="index-source">
             <pre><span class="ruby-comment"># File app/controllers/welcomes_controller.rb, line 3</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
-  
+
 <span class="ruby-keyword">end</span></pre>
           </div><!-- index-source -->
           
@@ -232,7 +230,7 @@
 
         <div class="method-description">
           
-          <p>Warning: This is an ABUSE of restful routing. I&#39;m a player or server ; 
+          <p>Warning: This is an ABUSE of restful routing. I&#39;m a player or server ;
 Players: show me a list of servers to connect to (or let me input a new
 one) Servers: wait for connections</p>
           
@@ -273,7 +271,7 @@ one) Servers: wait for connections</p>
           <div class="method-source-code" id="show-source">
             <pre><span class="ruby-comment"># File app/controllers/welcomes_controller.rb, line 27</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
-  
+
 <span class="ruby-keyword">end</span></pre>
           </div><!-- show-source -->
           

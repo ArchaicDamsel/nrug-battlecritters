@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 
-<title>class Server - Rails Application Documentation</title>
+<title>class Player - Rails Application Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -47,7 +47,7 @@
     <nav id="file-list-section" class="section">
   <h3 class="section-header">Defined In</h3>
   <ul>
-    <li>app/models/server.rb
+    <li>app/models/player.rb
   </ul>
 </nav>
 
@@ -59,7 +59,7 @@
     <nav id="parent-class-section" class="section">
   <h3 class="section-header">Parent</h3>
   
-  <p class="link">ActiveRecord::Base
+  <p class="link">Object
   
 </nav>
 
@@ -72,17 +72,15 @@
     
     <li><a href="#method-c-badger">::badger</a>
     
+    <li><a href="#method-c-create_badger">::create_badger</a>
+    
+    <li><a href="#method-c-create_fox">::create_fox</a>
+    
+    <li><a href="#method-c-find_by_animal">::find_by_animal</a>
+    
     <li><a href="#method-c-fox">::fox</a>
     
-    <li><a href="#method-c-main">::main</a>
-    
-    <li><a href="#method-c-make_main">::make_main</a>
-    
-    <li><a href="#method-i-killed_string">#killed_string</a>
-    
-    <li><a href="#method-i-missile_string">#missile_string</a>
-    
-    <li><a href="#method-i-opponent">#opponent</a>
+    <li><a href="#method-c-winner">::winner</a>
     
   </ul>
 </nav>
@@ -136,10 +134,13 @@
 </nav>
 
 <div id="documentation">
-  <h1 class="class">class Server</h1>
+  <h1 class="class">class Player</h1>
 
   <div id="description" class="description">
     
+<p>This is a semantic shim. Players are really just servers. Shhhh, don&#39;t
+tell anyone…</p>
+
   </div><!-- description -->
 
   
@@ -171,14 +172,14 @@
 
         <div class="method-description">
           
-          <p>DO NOT USE - try Badger.fox instead!</p>
+          
           
 
           
           <div class="method-source-code" id="badger-source">
-            <pre><span class="ruby-comment"># File app/models/server.rb, line 9</span>
+            <pre><span class="ruby-comment"># File app/models/player.rb, line 17</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">badger</span>
-  <span class="ruby-identifier">find_by_current_role</span> <span class="ruby-value">:badger</span>
+  <span class="ruby-constant">Server</span>.<span class="ruby-identifier">badger</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- badger-source -->
           
@@ -188,6 +189,100 @@
 
         
       </div><!-- badger-method -->
+
+    
+      <div id="method-c-create_badger" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_badger</span><span
+            class="method-args">(url)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="create_badger-source">
+            <pre><span class="ruby-comment"># File app/models/player.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_badger</span>(<span class="ruby-identifier">url</span>)
+  <span class="ruby-identifier">animal</span> = <span class="ruby-constant">Server</span>.<span class="ruby-identifier">find_or_create_by</span>(<span class="ruby-value">:hostname</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url</span>)
+  <span class="ruby-identifier">animal</span>.<span class="ruby-identifier">update_attribute</span> <span class="ruby-value">:current_role</span>, <span class="ruby-string">&#39;badger&#39;</span>
+  <span class="ruby-identifier">animal</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_badger-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_badger-method -->
+
+    
+      <div id="method-c-create_fox" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_fox</span><span
+            class="method-args">(url)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="create_fox-source">
+            <pre><span class="ruby-comment"># File app/models/player.rb, line 21</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_fox</span>(<span class="ruby-identifier">url</span>)
+  <span class="ruby-identifier">animal</span> = <span class="ruby-constant">Server</span>.<span class="ruby-identifier">find_or_create_by</span>(<span class="ruby-value">:hostname</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url</span>)
+  <span class="ruby-identifier">animal</span>.<span class="ruby-identifier">update_attribute</span> <span class="ruby-value">:current_role</span>, <span class="ruby-string">&#39;fox&#39;</span>
+  <span class="ruby-identifier">animal</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_fox-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_fox-method -->
+
+    
+      <div id="method-c-find_by_animal" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">find_by_animal</span><span
+            class="method-args">(animal)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="find_by_animal-source">
+            <pre><span class="ruby-comment"># File app/models/player.rb, line 5</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_by_animal</span>(<span class="ruby-identifier">animal</span>)
+  <span class="ruby-constant">Server</span>.<span class="ruby-identifier">find_by_current_role</span> <span class="ruby-identifier">animal</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- find_by_animal-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- find_by_animal-method -->
 
     
       <div id="method-c-fox" class="method-detail ">
@@ -201,14 +296,14 @@
 
         <div class="method-description">
           
-          <p>DO NOT USE - try <a href="Player.html#method-c-fox">Player.fox</a> instead!</p>
+          
           
 
           
           <div class="method-source-code" id="fox-source">
-            <pre><span class="ruby-comment"># File app/models/server.rb, line 4</span>
+            <pre><span class="ruby-comment"># File app/models/player.rb, line 13</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">fox</span>
-  <span class="ruby-identifier">find_by_current_role</span> <span class="ruby-value">:fox</span>
+  <span class="ruby-constant">Server</span>.<span class="ruby-identifier">fox</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- fox-source -->
           
@@ -220,10 +315,10 @@
       </div><!-- fox-method -->
 
     
-      <div id="method-c-main" class="method-detail ">
+      <div id="method-c-winner" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">main</span><span
+          <span class="method-name">winner</span><span
             class="method-args">()</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
@@ -235,149 +330,22 @@
           
 
           
-          <div class="method-source-code" id="main-source">
-            <pre><span class="ruby-comment"># File app/models/server.rb, line 13</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">main</span>
-  <span class="ruby-identifier">find_by_current_role</span> <span class="ruby-value">:badger</span>
+          <div class="method-source-code" id="winner-source">
+            <pre><span class="ruby-comment"># File app/models/player.rb, line 9</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">winner</span>
+  <span class="ruby-constant">Server</span>.<span class="ruby-identifier">find_by_winner</span>(<span class="ruby-keyword">true</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- main-source -->
+          </div><!-- winner-source -->
           
         </div>
 
         
 
         
-      </div><!-- main-method -->
-
-    
-      <div id="method-c-make_main" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">make_main</span><span
-            class="method-args">(url)</span>
-          <span class="method-click-advice">click to toggle source</span>
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-
-          
-          <div class="method-source-code" id="make_main-source">
-            <pre><span class="ruby-comment"># File app/models/server.rb, line 17</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">make_main</span>(<span class="ruby-identifier">url</span>)
-  <span class="ruby-constant">Server</span>.<span class="ruby-identifier">find_or_create_by</span>(<span class="ruby-value">:hostname</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url</span>).<span class="ruby-identifier">update_attribute</span> <span class="ruby-value">:current_role</span>, <span class="ruby-string">&#39;server&#39;</span>
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- make_main-source -->
-          
-        </div>
-
-        
-
-        
-      </div><!-- make_main-method -->
+      </div><!-- winner-method -->
 
     
     </section><!-- public-class-method-details -->
-  
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
-      <h3 class="section-header">Public Instance Methods</h3>
-
-    
-      <div id="method-i-killed_string" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">killed_string</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-
-          
-          <div class="method-source-code" id="killed_string-source">
-            <pre><span class="ruby-comment"># File app/models/server.rb, line 33</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">killed_string</span>
-  <span class="ruby-node">&quot;#{current_role}_hit&quot;</span>
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- killed_string-source -->
-          
-        </div>
-
-        
-
-        
-      </div><!-- killed_string-method -->
-
-    
-      <div id="method-i-missile_string" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">missile_string</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-
-          
-          <div class="method-source-code" id="missile_string-source">
-            <pre><span class="ruby-comment"># File app/models/server.rb, line 29</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">missile_string</span>
-  <span class="ruby-node">&quot;#{current_role}_missile&quot;</span>
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- missile_string-source -->
-          
-        </div>
-
-        
-
-        
-      </div><!-- missile_string-method -->
-
-    
-      <div id="method-i-opponent" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">opponent</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-
-          
-          <div class="method-source-code" id="opponent-source">
-            <pre><span class="ruby-comment"># File app/models/server.rb, line 24</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">opponent</span>
-  <span class="ruby-identifier">other</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">current_role</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;fox&#39;</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;badger&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;fox&#39;</span>
-  <span class="ruby-constant">Server</span>.<span class="ruby-identifier">find_by_current_role</span> <span class="ruby-identifier">other</span>
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- opponent-source -->
-          
-        </div>
-
-        
-
-        
-      </div><!-- opponent-method -->
-
-    
-    </section><!-- public-instance-method-details -->
   
   </section><!-- 5Buntitled-5D -->
 
