@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  server_id: 
+  representation_json: MyText
+
+two:
+  server_id: 
+  representation_json: MyText

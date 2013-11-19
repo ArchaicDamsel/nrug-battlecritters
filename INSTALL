@@ -1,0 +1,7 @@
+
+Mavericks users may have some interesting issues here: 
+
+  -  Have you installed xcode's Command Line Tools since upgrading?
+  -  SQLite3 can cause problems. running `brew reinstall sqlite` then set the shell variables it suggests as so (replace as necessary):
+export LDFLAGS="-L/usr/local/opt/sqlite/lib" CPPFLAGS="-I/usr/local/opt/sqlite/include"
+     Then do `gem uninstall sqlite3` and `bundle install` again
