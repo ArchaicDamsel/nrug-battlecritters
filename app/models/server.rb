@@ -18,14 +18,23 @@ class Server < ActiveRecord::Base
       Server.find_or_create_by(:hostname => url).update_attribute :current_role, 'server'
     end
 
-    def request_an_animal
-      self.find_by_current_role 'server'
-    end
-
     def make_badger
 
     end
   end
 
   has_one :board
+
+  def opponent
+    other = self.current_role == 'fox' ? 'badger' : 'fox'
+    Server.find_by_current_role other
+  end
+
+  def missile_string
+    "#{current_role}_missile"
+  end
+
+  def killed_string
+    "#{current_role}_hit"
+  end
 end

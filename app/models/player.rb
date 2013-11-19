@@ -6,6 +6,10 @@ class Player
       Server.find_by_current_role animal
     end
 
+    def winner
+      Server.find_by_winner(true)
+    end
+
     def fox
       Server.fox
     end

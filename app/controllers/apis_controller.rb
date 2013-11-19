@@ -47,6 +47,37 @@ class ApisController < ApplicationController
     end
 
     if @error
+      @animal.opponent.update_attribute :winner, true if @animal && @animal.opponent
+      render :text => @out.to_json, :status => 500
+    else
+      render :text => @out.to_json
+    end
+  end
+
+  def update
+    @animal = Player.find_by_animal(params[:animal])
+    x, y = params[:shot].map &:to_i
+
+    if @animal.nil?
+      @out = { :result => 'No such animal: You need to call the index action first.'}
+      @error = true
+    elsif Player.winner
+      @out = {:result => @animal.winner? ? "win" : "lose"}
+      @error = true
+    else
+      board = @animal.opponent.board
+      cell = board.get_cell x, y
+      if cell.nil? || cell == @animal.missile_string
+        board.fill_cell x, y, @animal.missile_string
+        @out = {:result => 'miss'}
+      elsif cell[@animal.opponent.current_role] # match substring in case we've hit this cell before
+        board.fill_cell x, y, @animal.opponent.killed_string
+        @out = {:result => 'hit'}
+      end
+
+    end
+
+    if @error
       render :text => @out.to_json, :status => 500
     else
       render :text => @out.to_json
@@ -65,12 +96,12 @@ class ApisController < ApplicationController
   def fill_board_from_params(board)
     params[:positions][:vertical].each do |length, x, y|
       length.to_i.times do |relative_position|
-        board.fillCell!(x.to_i, y.to_i + relative_position, @animal)
+        board.fill_cell!(x.to_i, y.to_i + relative_position, @animal.current_role)
       end
     end
     params[:positions][:horizontal].each do |length, x, y|
       length.to_i.times do |relative_position|
-        board.fillCell!(x.to_i + relative_position, y.to_i, @animal)
+        board.fill_cell!(x.to_i + relative_position, y.to_i, @animal.current_role)
       end
     end
     board.save

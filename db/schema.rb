@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20131117231924) do
   create_table "servers", force: true do |t|
     t.string   "hostname"
     t.string   "current_role"
+    t.boolean  "winner"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -93,4 +93,65 @@ describe ApisController do
       expect { JSON.parse(response.body)["result"] =~ /overlap/i }
     end
   end
+
+  context "shooting woodland creatures" do
+
+    context "with bad setup" do
+      before do
+        ['1.2.3.4', '2.4.6.8'].each do |hostname|
+          @request.env['REMOTE_ADDR'] = hostname
+          get :index
+          @animal_data = JSON.parse response.body
+          @animal = @animal_data['animal']
+          @available_pieces = @animal_data['pieces']
+          @board_dimensions = @animal_data['board']
+
+          @bad_layout =  { 
+            :horizontal => [], 
+            :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, 0, index] }
+          }
+
+          post :create, {:animal => @animal, :positions => @bad_layout}
+        end
+      end
+
+      it "should refuse to shoot" do
+        put :update, {:animal => @animal, :shot => [0,0]}
+        expect { response.status == 500 }
+        expect { JSON.parse(response.body)["result"] =~ /(win|lose)/i }
+      end
+    end
+
+    context "with good setup" do
+      before do
+        ['1.2.3.4', '2.4.6.8'].each do |hostname|
+          @request.env['REMOTE_ADDR'] = hostname
+          get :index
+          @animal_data = JSON.parse response.body
+          @animal = @animal_data['animal']
+          @available_pieces = @animal_data['pieces']
+          @board_dimensions = @animal_data['board']
+
+          @good_layout =  { 
+            :horizontal => [], 
+            :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, 0] }
+          }
+
+          post :create, {:animal => @animal, :positions => @good_layout}
+        end
+      end
+
+      it "should register a miss on an empty square" do
+        put :update, {:animal => @animal, :shot => [7,7]}
+        expect { response.status == 200 }
+        expect { JSON.parse(response.body)["result"] =~ /miss/i }
+      end
+
+      it "should register a hit on a filled square" do
+        put :update, {:animal => @animal, :shot => [0,0]}
+        expect { response.status == 200 }
+        expect { JSON.parse(response.body)["result"] =~ /hit/i }
+      end
+    end
+  end
 end

@@ -13,18 +13,22 @@ class Board < ActiveRecord::Base
     self.json_representation = rep.to_json
   end
 
-  def getCell(x,y)
+  def get_cell(x,y)
     representation["#{x}_#{y}"]
   end
 
-  def fillCell!(x, y, item)
-    raise LayoutError, "Overlap: Two items intersect at [#{x},#{y}]" if getCell(x,y)
-    fillCell x, y, item
+  def fill_cell!(x, y, item)
+    raise LayoutError, "Overlap: Two items intersect at [#{x},#{y}]" if get_cell(x,y)
+    fill_cell x, y, item
   end
 
-  def fillCell(x,y, item)
+  def fill_cell(x,y, item)
     rep = representation
     rep["#{x}_#{y}"] = item
     self.representation = rep
+  end
+
+  def unharmed_critters
+    self.representation.values.select { |item| item !=~ /hit/ && item !=~ /miss/}
   end
 end

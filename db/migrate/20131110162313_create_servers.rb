@@ -3,6 +3,7 @@ class CreateServers < ActiveRecord::Migration
     create_table :servers do |t|
       t.string :hostname
       t.string :current_role
+      t.boolean :winner
 
       t.timestamps
     end

@@ -34,12 +34,16 @@ You can send your list of positions with the following request:
 
 	POST /api
 
-The request needs to post the following form data in JSON format:
-	positions = 
-		'{
-			"vertical": [[piece, x, y], [piece, x, y], ...], 
-			"horizontal": [[piece, x, y], [piece, x, y], ...]
-		}'
+The request needs to post the following params:
+	{ 
+		:animal => :my_animal,
+		:positions =>
+			{
+				"vertical": [[piece, x, y], [piece, x, y], ...], 
+				"horizontal": [[piece, x, y], [piece, x, y], ...]
+			}
+		}
+	}
 
 ... where `piece` is a number 1 to 5 according to its size (for example, piece number five is the largest piece on the board spanning five squares).
 
@@ -109,14 +113,6 @@ The board's axises are labelled X and Y - where  [0,0] is the top left square (s
 * + marks the position for a vertical piece 5 in starting co-ordinates (1,3).
 * # marks the position for a horizontal piece 3 in starting co-ordinates (2,5).
 
-These arrays can be easily be written in ruby and converted to json using the .to_json method as follows:
-
-
-	{
-		:vertical => [[piece, x, y], [piece, x, y], ...], 
-		:horizontal => [[piece, x, y], [piece, x, y], ...]
-	}.to_json
-
 
 
 === Shooting
@@ -127,23 +123,18 @@ You do this with the following request:
 
 	PUT /api
 
-Your code should produce an infinite string of co-ordinates for each shot of your game strategy. Each shot should be sent to the server singularly in a JSON array as follows:
+Your code should produce an infinite string of co-ordinates for each shot of your game strategy. Each shot should be sent to the server singularly in params as follows:
 
 	{
-		"shot": [x, y]
+		:animal => :my_animal,
+		:shot => [x, y]
 	}
 
 As above X and Y are the the co-ordinates and refer to the squares on the board.
 
 Possible response statuses:
 * 200 - Successful shot
-* 500 - Error - probably because you've already lost.
-
-This also can be created using the .to_json method using ruby:
-
-	{
-		:shot => [x, y]
-	}.to_json
+* 500 - Error - probably because you've already lost or won.
 
 The response from the server should be as follows:
 
@@ -154,8 +145,11 @@ The response from the server should be as follows:
 The result will be one of the following
 * miss - you may have some angry moles on your hands, but no damage to your opponent
 * hit - you hit an enemy's home. There they were, eating dinner, a massive missile crashed through their roof. I hope you're proud. 
-* destroy - you have sunk their battleship. Erm, I mean destroyed the enemy target.
+* win - you win! Take home a cuddly toy.
+* lose - sorry, you lost.
+#* destroy - you have sunk their battleship. Erm, I mean destroyed the enemy target.
 
+Note: There is currently no indication whether you "sunk" their "battleship". You will have to explore all the edges of an enemy to be sure.
 
 Once all oppositions pieces have been destroyed the server will return the winner. 
 
