@@ -1,0 +1,10 @@
+<h1>Waiting for players</h1>
+<p>I'm a little index, short and stout</p>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var refresh = function() {
+			window.location = "<%= @destination %>";
+		}
+		setTimeout(refresh, 3000);
+	});
+</script>

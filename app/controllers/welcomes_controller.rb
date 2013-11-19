@@ -21,7 +21,7 @@ class WelcomesController < ApplicationController
     end
 
     Server.make_main(params[:server][:hostname])
-    redirect_to welcome_path
+    redirect_to gameplays_index_path
   end
 
   def show

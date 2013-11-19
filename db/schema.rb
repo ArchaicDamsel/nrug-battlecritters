@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131117231924) do
+ActiveRecord::Schema.define(version: 20131119152033) do
 
   create_table "boards", force: true do |t|
     t.integer  "server_id"
@@ -21,6 +21,15 @@ ActiveRecord::Schema.define(version: 20131117231924) do
   end
 
   add_index "boards", ["server_id"], name: "index_boards_on_server_id"
+
+  create_table "gameplays", force: true do |t|
+    t.integer  "board_width"
+    t.integer  "board_height"
+    t.string   "pieces_json"
+    t.string   "result"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "messages", force: true do |t|
     t.boolean  "outgoing"

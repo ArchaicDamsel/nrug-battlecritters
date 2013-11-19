@@ -6,6 +6,10 @@ class Player
       Server.find_by_current_role animal
     end
 
+    def current_animal(hostname)
+      Server.find_by_hostname hostname
+    end
+
     def winner
       Server.find_by_winner(true)
     end

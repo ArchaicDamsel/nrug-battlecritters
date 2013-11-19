@@ -4,7 +4,7 @@
 
 The first step is to register your intention to play. You do this with the following request:
 
-	GET /api
+	GET /apis
 
 
 Possible response statuses:
@@ -19,6 +19,11 @@ Server should return something similar to the following JSON:
 		"pieces": [5,4,3,2,1]
 	}
 
+Though if it fails, you'll receive a message like this:
+
+	{ "result": "Too late: Sorry someone has beat you to it" }
+
+
 === Position Pieces
 
 A JSON object containing two arrays needs to be sent back to the server:
@@ -32,7 +37,7 @@ A JSON object containing two arrays needs to be sent back to the server:
 
 You can send your list of positions with the following request:
 
-	POST /api
+	POST /apis
 
 The request needs to post the following params:
 	{ 
@@ -121,7 +126,7 @@ A JSON array containing your shooting co-ordinates for each shot is required.
 
 You do this with the following request:
 
-	PUT /api
+	PUT /apis
 
 Your code should produce an infinite string of co-ordinates for each shot of your game strategy. Each shot should be sent to the server singularly in params as follows:
 
@@ -145,7 +150,7 @@ The response from the server should be as follows:
 The result will be one of the following
 * miss - you may have some angry moles on your hands, but no damage to your opponent
 * hit - you hit an enemy's home. There they were, eating dinner, a massive missile crashed through their roof. I hope you're proud. 
-* win - you win! Take home a cuddly toy.
+* win - you win! Take home a cuddly toy. (note: no cuddly toys. Sorry.)
 * lose - sorry, you lost.
 #* destroy - you have sunk their battleship. Erm, I mean destroyed the enemy target.
 
@@ -156,11 +161,14 @@ Once all oppositions pieces have been destroyed the server will return the winne
 
 === FAQs:
 
+*	Why are you using /apis rather than /api?
+Because rails is a meanie. There is probably a way to fight rails and force a singular controller name throughout, and still have access to create and index actions, but to be honest I couldn't be bothered.
+
 *	What happens if I shoot at the same point repeatedly?
 Uhhh, other than giving the opposition the advantage? Absolutely nothing. The same response will be returned each time.
 
 *	Do I have to do this TDD-style?
-That would be preferred. But I'm not your mother. If I was your mother, I might tell you to stop shooting poor defenceless badgers. If I was my mother, I would help you skin them and boil up a tasty badger soup though, so your milage may vary. 
+That would be preferred. But I'm not your mother. If I was your mother, I might tell you to stop shooting poor defenceless badgers. If I was my mother, I would help you skin the badger and boil up a tasty badger soup though, so your milage may vary. 
 
 I would tell you a kitten dies for every untested line of code, but you're the kind of person to murder badgers in their sleep, so I doubt that would do much.
 

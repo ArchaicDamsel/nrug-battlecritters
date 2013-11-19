@@ -1,4 +1,8 @@
 Nrug::Application.routes.draw do
+  get "gameplays/index"
+  get "gameplays/new"
+  get "gameplays/edit"
+  get "gameplays/finish"
   get "board/show"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -12,6 +16,7 @@ Nrug::Application.routes.draw do
   get 'apis' => 'apis#index'
   post 'apis/:animal' => 'apis#create'
   put 'apis/:animal' => 'apis#update'
+  get 'apis/:animal' => 'apis#show'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

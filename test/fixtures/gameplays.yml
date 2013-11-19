@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  board_width: 1
+  board_height: 1
+  pieces_json: MyString
+  result: MyString
+
+two:
+  board_width: 1
+  board_height: 1
+  pieces_json: MyString
+  result: MyString

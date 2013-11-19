@@ -36,6 +36,26 @@ describe ApisController do
     end
   end
 
+  context "Waiting for players" do
+    it "should indicate that players have not connected" do
+      get :index
+      get :show, :animal => "fox"
+      @returned_data = JSON.parse response.body
+      expect { @returned_data['waiting_for'] == 'other players'}
+    end
+
+    it "should indicate players are ready to position pieces" do
+      @request.env['REMOTE_ADDR'] = '1.2.3.4'
+      get :index
+      @request.env['REMOTE_ADDR'] = '1.2.3.5'
+      get :index
+      get :show, :animal => "fox"
+      @returned_data = JSON.parse response.body
+      expect { @returned_data['waiting_for'] == "initial positions"}
+    end
+
+  end
+
   context "laying out my board" do
     before do 
       get :index

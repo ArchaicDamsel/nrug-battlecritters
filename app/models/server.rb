@@ -11,7 +11,7 @@ class Server < ActiveRecord::Base
     end
 
     def main
-      find_by_current_role :badger
+      find_by_current_role :server
     end
 
     def make_main(url)

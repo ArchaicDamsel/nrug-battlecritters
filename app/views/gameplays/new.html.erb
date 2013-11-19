@@ -1,0 +1,10 @@
+<h1>Setting up pieces...</h1>
+<pre><%= @gameplay.to_yaml %></pre>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var refresh = function() {
+			window.location = "<%= @destination %>";
+		}
+		setTimeout(refresh, 3000);
+	});
+</script>

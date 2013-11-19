@@ -1,6 +1,6 @@
 class ApisController < ApplicationController
-  before_filter :find_model
-
+  skip_before_filter :verify_authenticity_token
+  
   # Entry point: Please sir, can I play?
   def index
     url = request.remote_ip
@@ -20,6 +20,15 @@ class ApisController < ApplicationController
       @out = { :result => "Too late: Sorry someone has beat you to it" }
       render :text => @out.to_json, :status => 500
     end
+  end
+
+  def show
+      if Player.fox && Player.badger 
+        @out = {:waiting_for => "initial positions"}
+      else
+        @out = {:waiting_for => "other players"}
+      end
+      render :text => @out.to_json
   end
 
   def create
@@ -85,10 +94,6 @@ class ApisController < ApplicationController
   end
 
   private
-  def find_model
-    @model = Boards.find(params[:id]) if params[:id]
-  end
-
   def generate_pieces
     [5,4,3,2,1]
   end
