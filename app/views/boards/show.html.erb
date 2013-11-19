@@ -2,7 +2,7 @@
 	<%(0..7).each do |row_number|%>
 		<tr>
 		<%(0..7).each do |column_number|%>
-			<td><%= ['', image_tag('boardfox.png'), image_tag('hitfox.png'),image_tag('badgershot.png')].sample %></td>
+			<td><%= ['', image_tag('board_fox.png'), image_tag('board_fox_hit.png'), image_tag('board_badger_missile.png')].sample %></td>
 		<% end %>
 		</tr>
 	<% end %>
@@ -13,7 +13,7 @@
 	<%(0..7).each do |row_number|%>
 		<tr>
 		<%(0..7).each do |column_number|%>
-			<td><%= ['', image_tag('boardbadger.png'), image_tag('hitbadger.png'), image_tag('foxshot.png')].sample %></td>
+			<td><%= ['', image_tag('board_badger.png'), image_tag('board_badger_hit.png'), image_tag('board_fox_missile.png')].sample %></td>
 		<% end %>
 		</tr>
 	<% end %>

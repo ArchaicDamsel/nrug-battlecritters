@@ -2,8 +2,8 @@
 
 one:
   server_id: 
-  representation_json: MyText
+  json_representation: MyText
 
 two:
   server_id: 
-  representation_json: MyText
+  json_representation: MyText

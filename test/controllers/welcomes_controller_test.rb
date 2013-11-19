@@ -11,7 +11,7 @@ describe WelcomesController do
     end
 
     it "should respond with a success code" do
-      expect { response.code == '200'}
+      expect { response.status == 200 }
     end
   end
 

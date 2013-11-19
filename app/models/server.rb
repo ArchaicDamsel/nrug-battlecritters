@@ -26,4 +26,6 @@ class Server < ActiveRecord::Base
 
     end
   end
+
+  has_one :board
 end

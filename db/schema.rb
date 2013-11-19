@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20131117231924) do
 
   create_table "boards", force: true do |t|
     t.integer  "server_id"
-    t.text     "representation_json"
+    t.text     "json_representation"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

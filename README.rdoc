@@ -27,6 +27,9 @@ A JSON object containing two arrays needs to be sent back to the server:
 
 <b>Note: you will be responsible for ensuring that all pieces are placed, and that no pieces overlap. If you fail to do this, the server will reject your request and the other team will win by default</b>
 
+<b>Note: both vertical and horizontal arrays must be defined, but may be empty.</b>
+
+
 You can send your list of positions with the following request:
 
 	POST /api
@@ -43,6 +46,13 @@ The request needs to post the following form data in JSON format:
 Possible response statuses:
 * 200 - Successful placement
 * 500 - Error - probably because of overlapping pieces, or not all pieces being placed. Don't bother making any more requests - you've lost.
+
+Place your pieces wisely and the result will be JSON such as:
+
+		{
+			"result": "Success: You are ready to play!"
+		}
+
 
 === Explaination
 
@@ -107,6 +117,8 @@ These arrays can be easily be written in ruby and converted to json using the .t
 		:horizontal => [[piece, x, y], [piece, x, y], ...]
 	}.to_json
 
+
+
 === Shooting
 
 A JSON array containing your shooting co-ordinates for each shot is required. 
@@ -158,3 +170,5 @@ That would be preferred. But I'm not your mother. If I was your mother, I might 
 
 I would tell you a kitten dies for every untested line of code, but you're the kind of person to murder badgers in their sleep, so I doubt that would do much.
 
+*	There's a piece with size of 1 - WTF?!?
+Hah! Well, some animals prefer the solitary life. And we're sadistic. Go figure.

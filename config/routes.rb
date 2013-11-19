@@ -9,6 +9,10 @@ Nrug::Application.routes.draw do
 
   resource :welcome
 
+  get 'apis' => 'apis#index'
+  post 'apis/:animal' => 'apis#create'
+  put 'apis/:animal' => 'apis#update'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
@@ -58,16 +62,4 @@ Nrug::Application.routes.draw do
   #     resources :products
   #   end  
 
-    namespace :server_api do
-      # Directs /admin/products/* to Admin::ProductsController
-      # (app/controllers/admin/products_controller.rb)
-      resources :games
-      resources :boards
-    end
-
-    namespace :player_api do
-      # Directs /admin/products/* to Admin::ProductsController
-      # (app/controllers/admin/products_controller.rb)
-      resources :boards
-    end
 end
