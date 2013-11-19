@@ -1,28 +1,160 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+=== Request Team
 
-Things you may want to cover:
+The first step is to register your intention to play. You do this with the following request:
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+	GET /api
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Possible response statuses:
+* 200 - Successful request.
+* 500 - Error - there are probably already two players on the server.
+ 
+Server should return something similar to the following JSON:
+
+	{ 
+		"animal": "fox",
+		"board": [8,8],
+		"pieces": [5,4,3,2,1]
+	}
+
+=== Position Pieces
+
+A JSON object containing two arrays needs to be sent back to the server:
+* vertical: list of pieces oriented vertically
+* horizontal: list of pieces oriented horizontally
+
+<b>Note: you will be responsible for ensuring that all pieces are placed, and that no pieces overlap. If you fail to do this, the server will reject your request and the other team will win by default</b>
+
+You can send your list of positions with the following request:
+
+	POST /api
+
+The request needs to post the following form data in JSON format:
+	positions = 
+		'{
+			"vertical": [[piece, x, y], [piece, x, y], ...], 
+			"horizontal": [[piece, x, y], [piece, x, y], ...]
+		}'
+
+... where `piece` is a number 1 to 5 according to its size (for example, piece number five is the largest piece on the board spanning five squares).
+
+Possible response statuses:
+* 200 - Successful placement
+* 500 - Error - probably because of overlapping pieces, or not all pieces being placed. Don't bother making any more requests - you've lost.
+
+=== Explaination
+
+The board's axises are labelled X and Y - where  [0,0] is the top left square (see figure .1) . X and Y in the array are the co-ordinates of the first square of your piece starting with the highest or leftmost corner (depending on its orientation)(see figure .2).
+
+==== figure .1
+
+				y axis
+
+		 __0___1___2___3___4___5___6___7__ 
+		0| + |   |   |   |   |   |   |   |
+		 ---------------------------------
+		1|   |   |   |   |   |   |   |   | 
+		 ---------------------------------
+	 x	2|   |   |   |   |   |   |   |   |
+		 --------------------------------- 
+	 a	3|   |   |   |   |   |   |   |   | 
+	 x	 ---------------------------------
+	 i	4|   |   |   |   |   |   |   |   |
+	 s	 --------------------------------- 
+		5|   |   |   |   |   |   |   |   | 
+		 ---------------------------------
+		6|   |   |   |   |   |   |   |   | 
+		 ---------------------------------
+		7|   |   |   |   |   |   |   |   | 
+		 _________________________________
+		
+
+* + marks the square at (0,0)
+
+==== figure .2
+
+				y axis
+
+		 __0___1___2___3___4___5___6___7__ 
+		0|   |   |   |   |   |   |   |   |
+		 ---------------------------------
+		1|   |   |   | + |   |   |   |   | 
+		 ---------------------------------
+	 x	2|   |   |   | + |   | # | # | # |
+		 --------------------------------- 
+	 a	3|   |   |   | + |   |   |   |   | 
+	 x	 ---------------------------------
+	 i	4|   |   |   | + |   |   |   |   |
+	 s	 --------------------------------- 
+		5|   |   |   | + |   |   |   |   | 
+		 ---------------------------------
+		6|   |   |   |   |   |   |   |   | 
+		 ---------------------------------
+		7|   |   |   |   |   |   |   |   | 
+		 _________________________________
+
+
+* + marks the position for a vertical piece 5 in starting co-ordinates (1,3).
+* # marks the position for a horizontal piece 3 in starting co-ordinates (2,5).
+
+These arrays can be easily be written in ruby and converted to json using the .to_json method as follows:
+
+
+	{
+		:vertical => [[piece, x, y], [piece, x, y], ...], 
+		:horizontal => [[piece, x, y], [piece, x, y], ...]
+	}.to_json
+
+=== Shooting
+
+A JSON array containing your shooting co-ordinates for each shot is required. 
+
+You do this with the following request:
+
+	PUT /api
+
+Your code should produce an infinite string of co-ordinates for each shot of your game strategy. Each shot should be sent to the server singularly in a JSON array as follows:
+
+	{
+		"shot": [x, y]
+	}
+
+As above X and Y are the the co-ordinates and refer to the squares on the board.
+
+Possible response statuses:
+* 200 - Successful shot
+* 500 - Error - probably because you've already lost.
+
+This also can be created using the .to_json method using ruby:
+
+	{
+		:shot => [x, y]
+	}.to_json
+
+The response from the server should be as follows:
+
+	{
+		"result": "hit"
+	}
+
+The result will be one of the following
+* miss - you may have some angry moles on your hands, but no damage to your opponent
+* hit - you hit an enemy's home. There they were, eating dinner, a massive missile crashed through their roof. I hope you're proud. 
+* destroy - you have sunk their battleship. Erm, I mean destroyed the enemy target.
+
+
+Once all oppositions pieces have been destroyed the server will return the winner. 
+
+
+=== FAQs:
+
+*	What happens if I shoot at the same point repeatedly?
+Uhhh, other than giving the opposition the advantage? Absolutely nothing. The same response will be returned each time.
+
+*	Do I have to do this TDD-style?
+That would be preferred. But I'm not your mother. If I was your mother, I might tell you to stop shooting poor defenceless badgers. If I was my mother, I would help you skin them and boil up a tasty badger soup though, so your milage may vary. 
+
+I would tell you a kitten dies for every untested line of code, but you're the kind of person to murder badgers in their sleep, so I doubt that would do much.
+
