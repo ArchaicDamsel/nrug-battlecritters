@@ -68,9 +68,34 @@ describe ApisController do
         :vertical => []
       }
 
-      @good_layout =  { 
+      @good_layout = { 
         :horizontal => [], 
-        :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, 0, index] }
+        :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, 0] }
+      }
+
+      @incorrect_piece_layout = {
+        :horizontal => [], 
+        :vertical => [5,5,4,3,2,1].each_with_index.map {|piece, index| [piece, index, 4] }
+      }
+
+      @above_board_layout = {
+        :horizontal => [], 
+        :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, -1] }
+      }
+
+      @below_board_layout = {
+        :horizontal => [], 
+        :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, 4] }
+      }
+
+      @left_of_board_layout = {
+        :horizontal => @available_pieces.each_with_index.map {|piece, index| [piece, -1, index] },
+        :vertical => [], 
+      }
+
+      @right_of_board_layout = {
+        :horizontal => @available_pieces.each_with_index.map {|piece, index| [piece, 4, index] },
+        :vertical => []
       }
     end
 
@@ -80,17 +105,12 @@ describe ApisController do
       expect { JSON.parse(response.body)["result"] =~ /missing positions/i }
     end
 
-    it "should reject a board with too few pieces" do
-      post :create, {:animal => :fox, :positions => {:horizontal => [], :vertical => []}}
-      expect { response.status == 500 }
-      expect { JSON.parse(response.body)["result"] =~ /too few/i }
-    end
-
-    it "should reject a board with wrong pieces" do
-      skip
-      post :create, {:animal => :fox, :positions => {:horizontal => [], :vertical => []}}
-      expect { response.status == 500 }
-      expect { JSON.parse(response.body)["result"] =~ /too few/i }
+    context "board with wrong pieces" do
+      it "should reject board with incorrect pieces" do
+        post :create, {:animal => :fox, :positions => @incorrect_piece_layout}
+        expect { response.status == 500 }
+        expect { JSON.parse(response.body)["result"] =~ /incorrect pieces/i }
+      end
     end
 
     it "should reject a second board layout" do
@@ -113,12 +133,47 @@ describe ApisController do
       expect { JSON.parse(response.body)["result"] =~ /overlap/i }
     end
 
-    it "should reject pieces outside the board" do
-      post :create, :animal => :fox, :positions => @overlapping_layout
+    context "outside the board" do
 
-      expect { JSON.parse(response.body)["result"] =~ /overlap/i }
+      it "should reject pieces above the board" do
+        post :create, :animal => :fox, :positions => @above_board_layout
+
+        expect { JSON.parse(response.body)["result"] =~ /out of bounds/i }
+      end
+
+      it "should reject pieces below the board" do
+        post :create, :animal => :fox, :positions => @below_board_layout
+
+        expect { JSON.parse(response.body)["result"] =~ /out of bounds/i }
+      end
+
+      it "should reject pieces left of the board" do
+        post :create, :animal => :fox, :positions => @left_of_board_layout
+
+        expect { JSON.parse(response.body)["result"] =~ /out of bounds/i }
+      end
+
+      it "should reject pieces right of the board" do
+        post :create, :animal => :fox, :positions => @right_of_board_layout
+
+        expect { JSON.parse(response.body)["result"] =~ /out of bounds/i }
+      end
     end
 
+    it "should declare both players losers if they both give invalid boards" do
+      # Player 1 loses
+      post :create, :animal => :fox, :positions => @right_of_board_layout
+      expect { JSON.parse(response.body)["result"] =~ /out of bounds/i }
+      
+      # The badger is also playing, and loses
+      @request.env['REMOTE_ADDR'] = '1.2.3.4'
+      get :index 
+      post :create, :animal => :badger, :positions => @overlapping_layout
+      expect { JSON.parse(response.body)["result"] =~ /overlap/i }
+
+      get :show, :animal => :badger
+      expect { JSON.parse(response.body)["result"] =~ /both teams lost/i }
+    end
   end
 
 

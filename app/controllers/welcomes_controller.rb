@@ -41,6 +41,7 @@ class WelcomesController < ApplicationController
       Server.all.each do |old_server|
         old_server.update_attribute :current_role, ''
         old_server.update_attribute :winner, false
+        old_server.update_attribute :loser, false
       end
     end
     Server.find_or_create_by permitted_params[:server]

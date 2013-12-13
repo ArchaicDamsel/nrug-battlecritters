@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131204163715) do
+ActiveRecord::Schema.define(version: 20131213212725) do
 
   create_table "boards", force: true do |t|
     t.integer  "server_id"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 20131204163715) do
     t.boolean  "winner"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "loser"
   end
 
 end

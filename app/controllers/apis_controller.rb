@@ -23,12 +23,21 @@ class ApisController < ApplicationController
   end
 
   def show
-      if Player.fox && Player.badger 
+    if !Player.fox || !Player.badger
+      @out = {:waiting_for => "other players"}
+    else
+      fox, badger = Player.fox, Player.badger
+      if !fox.board || !badger.board
         @out = {:waiting_for => "initial positions"}
-      else
-        @out = {:waiting_for => "other players"}
+      elsif Player.game_over?
+        if fox.loser? && badger.loser?
+          @out = {:waiting_for => "next game", :result => "Both teams lost"}
+        else
+          @out = {:waiting_for => "next game", :result => "#{Player.winner.current_role} won"}
+        end
       end
-      render :text => @out.to_json
+    end
+    render :text => @out.to_json
   end
 
   def create
@@ -41,8 +50,8 @@ class ApisController < ApplicationController
     elsif params[:positions].nil? or params[:positions][:horizontal].nil? or params[:positions][:vertical].nil?
       @out = { :result => 'Missing positions: positions[horizontal] and positions[vertical] must be arrays' }
       @error = true
-    elsif (params[:positions][:horizontal] + params[:positions][:vertical]).count < generate_pieces.length
-      @out = { :result => 'Too few: Not all your pieces were placed' }
+    elsif attempting_to_place_incorrect_pieces?
+      @out = { :result => "Incorrect pieces: You were given #{generate_pieces.inspect} and tried to place #{@piece_names}" }
       @error = true
     elsif @animal.board
       @out = { :result => 'Repeated setup: You must not create multiple boards for the same player' }
@@ -56,6 +65,7 @@ class ApisController < ApplicationController
     end
 
     if @error
+      @animal.update_attribute :loser, true if @animal
       @animal.opponent.update_attribute :winner, true if @animal && @animal.opponent
       render :text => @out.to_json, :status => 500
     else
@@ -65,25 +75,28 @@ class ApisController < ApplicationController
 
   def update
     @animal = Player.find_by_animal(params[:animal])
-    x, y = params[:shot].map &:to_i
+    if @animal.still_playing?
+      x, y = params[:shot].map &:to_i
 
-    if @animal.nil?
-      @out = { :result => 'No such animal: You need to call the index action first.'}
-      @error = true
-    elsif Player.winner
-      @out = {:result => @animal.winner? ? "win" : "lose"}
-      @error = true
-    else
-      board = @animal.opponent.board
-      cell = board.get_cell x, y
-      if cell.nil? || cell == @animal.missile_string
-        board.fill_cell x, y, @animal.missile_string
-        @out = {:result => 'miss'}
-      elsif cell[@animal.opponent.current_role] # match substring in case we've hit this cell before
-        board.fill_cell x, y, @animal.opponent.killed_string
-        @out = {:result => 'hit'}
+      if @animal.nil?
+        @out = { :result => 'No such animal: You need to call the index and create actions first.'}
+        @error = true
+      elsif Player.game_over?
+        @out = {:result => @animal.won? ? "win" : "lose"}
+        @error = true
+      else
+        board = @animal.opponent.board
+        cell = board.get_cell x, y
+        if cell.nil? || cell == @animal.missile_string
+          board.fill_cell x, y, @animal.missile_string
+          @out = {:result => 'miss'}
+        elsif cell[@animal.opponent.current_role] # match substring in case we've hit this cell before
+          board.fill_cell x, y, @animal.opponent.killed_string
+          @out = {:result => 'hit'}
+        end
       end
-
+    else
+      @out = {:result => @animal.won? ? "win" : "lose"}
     end
 
     if @error
@@ -96,6 +109,14 @@ class ApisController < ApplicationController
   private
   def generate_pieces
     [5,4,3,2,1]
+  end
+
+  def attempting_to_place_incorrect_pieces?
+    placed_pieces = params[:positions][:horizontal] + params[:positions][:vertical]
+
+    @piece_names = placed_pieces.map(&:first).map(&:to_i)
+
+    generate_pieces.sort != @piece_names.sort
   end
 
   def fill_board_from_params(board)

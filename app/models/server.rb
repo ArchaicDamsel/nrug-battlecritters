@@ -26,6 +26,19 @@ class Server < ActiveRecord::Base
     Server.find_by_current_role other
   end
 
+  def still_playing?
+    return true if !opponent
+    !winner? && !loser? && !opponent.winner? && !opponent.loser?
+  end
+
+  def won?
+    !still_playing? && (winner? || opponent.loser?)
+  end
+
+  def lost?
+    !still_playing? && (loser? || opponent.winner?)
+  end
+
   def missile_string
     "#{current_role}_missile"
   end

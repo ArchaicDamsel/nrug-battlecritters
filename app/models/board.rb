@@ -17,7 +17,16 @@ class Board < ActiveRecord::Base
     representation["#{x}_#{y}"]
   end
 
+  def cell_exists?(x,y)
+    return false if x < 0
+    return false if x > width - 1
+    return false if y < 0 
+    return false if y > height - 1
+    return true
+  end
+
   def fill_cell!(x, y, item)
+    raise LayoutError, "Out of bounds piece: Cell exists #{[x,y].inspect} #{cell_exists?(x,y).inspect} for board [#{width}, #{height}]" unless cell_exists?(x,y)
     raise LayoutError, "Overlap: Two items intersect at [#{x},#{y}]" if get_cell(x,y)
     fill_cell x, y, item
   end
@@ -32,7 +41,5 @@ class Board < ActiveRecord::Base
     self.representation.values.select { |item| item !=~ /hit/ && item !=~ /miss/}
   end
 
-  def cell_exists?(x,y)
-  end
-
 end
+

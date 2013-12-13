@@ -10,8 +10,12 @@ class Player
       Server.find_by_hostname hostname
     end
 
+    def game_over?
+      Server.find_by_winner(true) || Server.find_by_loser(true)
+    end
+
     def winner
-      Server.find_by_winner(true)
+      Server.find_by_winner(true) || Server.find_by_loser(true).opponent
     end
 
     def fox
