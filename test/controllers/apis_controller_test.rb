@@ -112,7 +112,16 @@ describe ApisController do
 
       expect { JSON.parse(response.body)["result"] =~ /overlap/i }
     end
+
+    it "should reject pieces outside the board" do
+      post :create, :animal => :fox, :positions => @overlapping_layout
+
+      expect { JSON.parse(response.body)["result"] =~ /overlap/i }
+    end
+
   end
+
+
 
   context "shooting woodland creatures" do
 

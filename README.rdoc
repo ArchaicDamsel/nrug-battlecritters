@@ -37,7 +37,7 @@ A JSON object containing two arrays needs to be sent back to the server:
 
 You can send your list of positions with the following request:
 
-	POST /apis
+	POST /apis/:animal
 
 The request needs to post the following params:
 	{ 

@@ -31,4 +31,8 @@ class Board < ActiveRecord::Base
   def unharmed_critters
     self.representation.values.select { |item| item !=~ /hit/ && item !=~ /miss/}
   end
+
+  def cell_exists?(x,y)
+  end
+
 end
