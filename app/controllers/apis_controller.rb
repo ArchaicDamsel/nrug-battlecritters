@@ -4,11 +4,10 @@ class ApisController < ApplicationController
   # Entry point: Please sir, can I play?
   def index
     url = request.remote_ip
-
     if Player.fox.nil? || Player.fox.hostname == url
-      player = Player.create_fox(url)
+      player = Player.find_or_create_fox(url)
     elsif Player.badger.nil? || Player.badger.hostname == url
-      player = Player.create_badger(url)
+      player = Player.find_or_create_badger(url)
     else
       player = nil
     end

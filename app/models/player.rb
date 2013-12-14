@@ -26,13 +26,13 @@ class Player
       Server.badger
     end
 
-    def create_fox(url)
+    def find_or_create_fox(url)
       animal = Server.find_or_create_by(:hostname => url)
       animal.update_attribute :current_role, 'fox'
       animal
     end
 
-    def create_badger(url)
+    def find_or_create_badger(url)
       animal = Server.find_or_create_by(:hostname => url)
       animal.update_attribute :current_role, 'badger'
       animal

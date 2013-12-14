@@ -18,6 +18,7 @@ class GameplaysController < ApplicationController
       gameplay.board_width = response['board'][0]
       gameplay.board_height = response['board'][1]
       gameplay.pieces_json = response['pieces'].to_json
+      raise response.inspect
       if response['ready_to_go']
         @destination = gameplays_new_path
       else
