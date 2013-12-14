@@ -3,15 +3,18 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_filter :find_my_hostname, :decide_team
+  before_filter :find_or_create_uuid, :decide_team
 
-  def find_my_hostname
-    my_port = request.port == 80 ? '' : ":#{request.port}"
-    @my_hostname = "#{request.host}#{my_port}"
+  def find_or_create_uuid
+    @uuid = params[:uuid] || generate_uuid
+  end
+
+  def generate_uuid
+    "UUID-" + rand(0..999).to_s(16) + rand(0..999).to_s(16)
   end
 
   def decide_team
-    server = Server.find_by(:hostname, find_my_hostname) 
+    server = Server.find_by(:hostname, @uuid) 
     @my_team = server ? server.current_role : 'Unknown'
   end
 end

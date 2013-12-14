@@ -1,19 +1,19 @@
 class ApisController < ApplicationController
   skip_before_filter :verify_authenticity_token
+  before_filter :get_player_uuid
   
   # Entry point: Please sir, can I play?
   def index
-    url = request.remote_ip
-    if Player.fox.nil? || Player.fox.hostname == url
-      player = Player.find_or_create_fox(url)
-    elsif Player.badger.nil? || Player.badger.hostname == url
-      player = Player.find_or_create_badger(url)
+    if Player.fox.nil? || Player.fox.hostname == @player_uuid
+      player = Player.find_or_create_fox(@player_uuid)
+    elsif Player.badger.nil? || Player.badger.hostname == @player_uuid
+      player = Player.find_or_create_badger(@player_uuid)
     else
       player = nil
     end
 
     if player 
-      @out = {:animal => player.current_role, :board => [8,8], :pieces => generate_pieces, :ready_to_go => player.has_opponent?}
+      @out = {:animal => player.current_role, :board => generate_board, :pieces => generate_pieces, :ready_to_go => player.has_opponent?}
       render :text => @out.to_json
     else
       @out = { :result => "Too late: Sorry someone has beat you to it" }
@@ -105,8 +105,16 @@ class ApisController < ApplicationController
   end
 
   private
+  def get_player_uuid
+    @player_uuid = params[:uuid]
+  end
+
   def generate_pieces
     [5,4,3,2,1]
+  end
+
+  def generate_board
+    [8,8]
   end
 
   def unparse_position_parameters

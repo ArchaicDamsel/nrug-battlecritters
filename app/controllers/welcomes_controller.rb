@@ -11,7 +11,7 @@ class WelcomesController < ApplicationController
   def new
     setup_current_server
 
-    @other_servers = Server.where.not :hostname => @my_hostname
+    @other_servers = Server.where.not("hostname LIKE ?", "UUID%")
   end
 
   # I'm a player; I have entered the server hostname
@@ -21,7 +21,7 @@ class WelcomesController < ApplicationController
     end
 
     Server.make_main(params[:server][:hostname])
-    redirect_to gameplays_index_path
+    redirect_to gameplays_index_path(:uuid => params[:uuid])
   end
 
   def show
@@ -32,7 +32,7 @@ class WelcomesController < ApplicationController
   private
 
   def setup_current_server
-    params[:server][:hostname] = @my_hostname
+    params[:server][:hostname] = @uuid
     permitted_params = params.permit(:server => [:current_role, :hostname])
     @role = params[:server][:current_role]
     if @role == 'server'

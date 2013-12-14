@@ -7,22 +7,22 @@ class GameplaysController < ApplicationController
 
   # TODO: Welcome to the fat controller. Can we push complexity to the models?
   def index
-    response = get_from_api("/apis")
+    @response = get_from_api("/apis")
     gameplay = Gameplay.new
 
-    if response['result']  # you lose or game cannot be started
-      gameplay.result = response['result']
-      @destination = gameplays_finish_path
+    if @response['result']  # you lose or game cannot be started
+      gameplay.result = @response['result']
+      @destination = finish_url
     else
-      @animal.update_attribute :current_role, response["animal"]
-      gameplay.board_width = response['board'][0]
-      gameplay.board_height = response['board'][1]
-      gameplay.pieces_json = response['pieces'].to_json
-      raise response.inspect
-      if response['ready_to_go']
-        @destination = gameplays_new_path
+      @animal.update_attribute :current_role, @response["animal"]
+      gameplay.board_width = @response['board'][0]
+      gameplay.board_height = @response['board'][1]
+      gameplay.pieces_json = @response['pieces'].to_json
+
+      if @response['ready_to_go']
+        @destination = new_url
       else
-        @destination = gameplays_index_path # Waiting for second player
+        @destination = index_url # Waiting for second player
       end
     end
 
@@ -37,7 +37,7 @@ class GameplaysController < ApplicationController
       :horizontal => []
     }
     @response = post_to_api("/apis/#{@animal.current_role}", :positions => positions)
-    @destination = gameplays_edit_path
+    @destination = edit_url
   end
 
   def edit
@@ -47,9 +47,9 @@ class GameplaysController < ApplicationController
     @present_shot = put_to_api("/apis/#{@animal.current_role}", :shot => @shot)
 
     if @present_shot['result'] == 'win' || @present_shot['result'] == 'lose'
-      @destination = gameplays_finish_path
+      @destination = finish_url
     else
-      @destination = gameplays_edit_path
+      @destination = edit_url
     end
   end
 
@@ -60,11 +60,27 @@ class GameplaysController < ApplicationController
   private
 
   def get_my_animal
-    @animal = Player.current_animal @my_hostname
+    @animal = Player.current_animal @uuid
+  end
+
+  def index_url
+    gameplays_index_path :uuid => @uuid
+  end
+
+  def new_url
+    gameplays_new_path :uuid => @uuid
+  end
+
+  def edit_url
+    gameplays_edit_path :uuid => @uuid
+  end
+
+  def finish_url
+    gameplays_finish_path :uuid => @uuid
   end
 
   def connect_to_api(path)
-    @api = SimpleHttp.new(Server.main.hostname + path)
+    @api = SimpleHttp.new(Server.main.hostname + path + "?uuid=#{@uuid}")
     @api.register_response_handler Net::HTTPResponse do |request, response, other|
       response.body
     end
@@ -76,7 +92,7 @@ class GameplaysController < ApplicationController
   end
 
   def put_to_api(path, data)
-    uri = URI.parse('http://' + Server.main.hostname + path)
+    uri = URI.parse('http://' + Server.main.hostname + path + "?uuid=#{@uuid}")
     req = Net::HTTP::Put.new(uri)
     req.body = build_nested_query(data)
     response = Net::HTTP.start(uri.hostname, uri.port)  do |http|
@@ -86,7 +102,7 @@ class GameplaysController < ApplicationController
   end
 
   def post_to_api(path, data)
-    uri = URI.parse('http://' + Server.main.hostname + path)
+    uri = URI.parse('http://' + Server.main.hostname + path + "?uuid=#{@uuid}")
     req = Net::HTTP::Post.new(uri)
     req.body = build_nested_query(data)
     response = Net::HTTP.start(uri.hostname, uri.port)  do |http|

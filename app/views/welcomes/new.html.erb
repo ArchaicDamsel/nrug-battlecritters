@@ -1,11 +1,11 @@
 <div class="welcome">
 	<% if @role == 'server' %>
 		<h3>My hostname is:</h3>
-		<h1><%= @my_hostname %></h1>
+		<h1><%= request.host %><%= request.port == 80 ? '' : ":#{request.port}" %></h1>
 	<% else %>
 		<h3>Where is the server?</h3>
 		<p>(look at the big screen!)</p>
-		<%= form_for :server, :url => welcome_path do |f| %>
+		<%= form_for :server, :url => welcome_path(:uuid => @uuid) do |f| %>
 			<% unless @other_servers.count == 0 %>
 			<fieldset>
 				<label>Recent hosts: </label>

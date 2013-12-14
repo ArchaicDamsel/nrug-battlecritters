@@ -3,65 +3,70 @@ require 'test_helper'
 describe ApisController do
   context "Starting the game" do
     before do
-      get :index
-      @returned_data = JSON.parse response.body
+      get :index, :uuid => 'abcd'
     end
 
     it "should create fox" do
-      expect { @returned_data["animal"] == 'fox' }
+      expect { JSON.parse(response.body)["animal"] == 'fox' }
     end
 
     it "should create badger" do
-      @request.env['REMOTE_ADDR'] = '1.2.3.4'
-      get :index
-      @returned_data = JSON.parse response.body
-      expect { @returned_data["animal"] == 'badger' }
+      get :index, :uuid => 'efgh'
+      expect { JSON.parse(response.body)["animal"] == 'badger' }
     end
 
     it "should allow no more players" do
-      @request.env['REMOTE_ADDR'] = '1.2.3.4'
-      get :index
-      @request.env['REMOTE_ADDR'] = '1.2.3.5'
-      get :index
+      get :index, :uuid => 'efgh'
+      get :index, :uuid => 'ijkl'
       expect { response.status == 500 }
       expect { JSON.parse(response.body)["result"] =~ /too late/i }
     end
 
+    it "should tell me when both players are ready" do
+      expect { JSON.parse(response.body)["ready_to_go"] == false }
+      get :index, :uuid => 'efgh'
+      expect { JSON.parse(response.body)["ready_to_go"] == true }
+      get :index, :animal => 'fox', :uuid => 'abcd'
+      expect { JSON.parse(response.body)["ready_to_go"] == true }
+      get :index, :animal => 'badger', :uuid => 'efgh'
+      expect { JSON.parse(response.body)["ready_to_go"] == true }
+    end
+
     it "should indicate the board size" do
-      expect { @returned_data["board"] == [8,8] }
+      expect { JSON.parse(response.body)["board"] == [8,8] }
     end
 
     it "should indicate the pieces available" do
-      expect { @returned_data["pieces"] == [5,4,3,2,1] }
+      expect { JSON.parse(response.body)["pieces"] == [5,4,3,2,1] }
     end
   end
 
   context "Waiting for players" do
     it "should indicate that players have not connected" do
-      get :index
-      get :show, :animal => "fox"
-      @returned_data = JSON.parse response.body
-      expect { @returned_data['waiting_for'] == 'other players'}
+      get :index, :uuid => 'abcd'
+      get :show, :animal => "fox", :uuid => 'abcd'
+      expect { JSON.parse(response.body)['waiting_for'] == 'other players'}
     end
 
     it "should indicate players are ready to position pieces" do
-      @request.env['REMOTE_ADDR'] = '1.2.3.4'
-      get :index
-      @request.env['REMOTE_ADDR'] = '1.2.3.5'
-      get :index
-      get :show, :animal => "fox"
-      @returned_data = JSON.parse response.body
-      expect { @returned_data['waiting_for'] == "initial positions"}
+      get :index, :uuid => 'abcd'
+      get :index, :uuid => 'efgh'
+      get :show, :animal => "fox", :uuid => 'abcd'
+    
+      expect { JSON.parse(response.body)['waiting_for'] == "initial positions"}
     end
 
   end
 
   context "laying out my board" do
     before do 
-      get :index
+      get :index, :uuid => 'abcd'
       @animal_data = JSON.parse response.body
       @available_pieces = @animal_data['pieces']
       @board_dimensions = @animal_data['board']
+
+      # Need second animal to connect before we're allowed to lay out the board
+      get :index, :uuid => 'efgh'
 
       @overlapping_layout = { 
         :horizontal => @available_pieces.each_with_index.map {|piece, index| [piece, index, 0] }.to_json, 
@@ -121,12 +126,6 @@ describe ApisController do
       expect { JSON.parse(response.body)["result"] =~ /repeated setup/i }
     end
 
-    it "should reject non-existant animal" do
-      post :create, {:animal => :badger}
-      expect { response.status == 500 }
-      expect { JSON.parse(response.body)["result"] =~ /no such animal/i }
-    end
-
     it "should reject a board with overlapping pieces" do
       post :create, :animal => :fox, :positions => @overlapping_layout
 
@@ -167,11 +166,11 @@ describe ApisController do
       
       # The badger is also playing, and loses
       @request.env['REMOTE_ADDR'] = '1.2.3.4'
-      get :index 
+      get :index , :uuid => 'abcd'
       post :create, :animal => :badger, :positions => @overlapping_layout
       expect { JSON.parse(response.body)["result"] =~ /overlap/i }
 
-      get :show, :animal => :badger
+      get :show, :animal => :badger, :uuid => 'abcd'
       expect { JSON.parse(response.body)["result"] =~ /both teams lost/i }
     end
   end
@@ -182,9 +181,8 @@ describe ApisController do
 
     context "with bad setup" do
       before do
-        ['1.2.3.4', '2.4.6.8'].each do |hostname|
-          @request.env['REMOTE_ADDR'] = hostname
-          get :index
+        ['abcd', 'efgh'].each do |uuid|
+          get :index, :uuid => uuid
           @animal_data = JSON.parse response.body
           @animal = @animal_data['animal']
           @available_pieces = @animal_data['pieces']
@@ -195,7 +193,7 @@ describe ApisController do
             :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, 0, index] }.to_json
           }
 
-          post :create, {:animal => @animal, :positions => @bad_layout}
+          post :create, :animal => @animal, :positions => @bad_layout, :uuid => uuid
         end
       end
 
@@ -208,9 +206,8 @@ describe ApisController do
 
     context "with good setup" do
       before do
-        ['1.2.3.4', '2.4.6.8'].each do |hostname|
-          @request.env['REMOTE_ADDR'] = hostname
-          get :index
+        ['abcd', 'efgh'].each do |uuid|
+          get :index, :uuid => uuid
           @animal_data = JSON.parse response.body
           @animal = @animal_data['animal']
           @available_pieces = @animal_data['pieces']
@@ -221,18 +218,20 @@ describe ApisController do
             :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, 0] }.to_json
           }
 
-          post :create, {:animal => @animal, :positions => @good_layout}
+          post :create, :animal => @animal, :positions => @good_layout, :uuid => uuid
+
+          @last_uuid = uuid
         end
       end
 
       it "should register a miss on an empty square" do
-        put :update, {:animal => @animal, :shot => [7,7]}
+        put :update, :animal => @animal, :shot => [7,7], :uuid => @last_uuid
         expect { response.status == 200 }
         expect { JSON.parse(response.body)["result"] =~ /miss/i }
       end
 
       it "should register a hit on a filled square" do
-        put :update, {:animal => @animal, :shot => [0,0]}
+        put :update, :animal => @animal, :shot => [0,0], :uuid => @last_uuid
         expect { response.status == 200 }
         expect { JSON.parse(response.body)["result"] =~ /hit/i }
       end
