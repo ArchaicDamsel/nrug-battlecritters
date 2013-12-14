@@ -26,6 +26,10 @@ class Server < ActiveRecord::Base
     Server.find_by_current_role other
   end
 
+  def has_opponent?
+    !!opponent
+  end
+
   def still_playing?
     return true if !opponent
     !winner? && !loser? && !opponent.winner? && !opponent.loser?

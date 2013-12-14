@@ -11,14 +11,18 @@ class GameplaysController < ApplicationController
     gameplay = Gameplay.new
 
     if response['result']  # you lose or game cannot be started
-      @destination = gameplays_finish_path
       gameplay.result = response['result']
+      @destination = gameplays_finish_path
     else
-      @destination = gameplays_new_path
       @animal.update_attribute :current_role, response["animal"]
       gameplay.board_width = response['board'][0]
       gameplay.board_height = response['board'][1]
       gameplay.pieces_json = response['pieces'].to_json
+      if response['ready_to_go']
+        @destination = gameplays_new_path
+      else
+        @destination = gameplays_index_path # Waiting for second player
+      end
     end
 
     gameplay.save
@@ -32,7 +36,7 @@ class GameplaysController < ApplicationController
       :horizontal => []
     }
     @response = post_to_api("/apis/#{@animal.current_role}", :positions => positions)
-    @destination = gameplays_new_path
+    @destination = gameplays_edit_path
   end
 
   def edit

@@ -14,7 +14,7 @@ class ApisController < ApplicationController
     end
 
     if player 
-      @out = {:animal => player.current_role, :board => [8,8], :pieces => generate_pieces}
+      @out = {:animal => player.current_role, :board => [8,8], :pieces => generate_pieces, :ready_to_go => player.has_opponent?}
       render :text => @out.to_json
     else
       @out = { :result => "Too late: Sorry someone has beat you to it" }
