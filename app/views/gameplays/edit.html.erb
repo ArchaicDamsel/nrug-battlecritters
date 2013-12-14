@@ -1,1 +1,16 @@
-<%= @present_shot.inspect %>
+<h1>
+	Shot: <%= @shot.inspect %>
+</h1>
+<h2>
+	<%= @present_shot.inspect %>
+</h2>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var refresh = function() {
+			window.location = "<%= @destination %>";
+		}
+		setTimeout(refresh, 1000);
+	});
+</script>

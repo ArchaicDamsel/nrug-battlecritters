@@ -44,11 +44,16 @@ class GameplaysController < ApplicationController
     width, height = @gameplay.board_width, @gameplay.board_height
     @shot = [rand(width), rand(height)]
     @present_shot = put_to_api("/apis/#{@animal.current_role}", :shot => @shot)
-    destination = gameplays_edit_path
+
+    if @present_shot['result'] == 'win' || @present_shot['result'] == 'lose'
+      @destination = gameplays_finish_path
+    else
+      @destination = gameplays_edit_path
+    end
   end
 
   def finish
-    @destination = gameplays_finish_path
+
   end
 
   private
