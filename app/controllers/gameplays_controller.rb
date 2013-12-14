@@ -40,8 +40,11 @@ class GameplaysController < ApplicationController
   end
 
   def edit
-    @destination = gameplays_edit_path
-    put_to_api("/apis/#{@animal.current_role}", :shot => [0,0])
+    @gameplay = Gameplay.current    
+    width, height = @gameplay.board_width, @gameplay.board_height
+    @shot = [rand(width), rand(height)]
+    @present_shot = put_to_api("/apis/#{@animal.current_role}", :shot => @shot)
+    destination = gameplays_edit_path
   end
 
   def finish
@@ -69,21 +72,39 @@ class GameplaysController < ApplicationController
   def put_to_api(path, data)
     uri = URI.parse('http://' + Server.main.hostname + path)
     req = Net::HTTP::Put.new(uri)
-    req.body = Rack::Utils.build_nested_query(data)
-    response = Net::HTTP.start(uri.hostname, uri.port)  do |http|
-      http.request req
-    end
-  end
-
-  def post_to_api(path, data)
-    uri = URI.parse('http://' + Server.main.hostname + path)
-    req = Net::HTTP::Post.new(uri)
-    req.body = Rack::Utils.build_nested_query(data)
+    req.body = build_nested_query(data)
     response = Net::HTTP.start(uri.hostname, uri.port)  do |http|
       http.request req
     end
     JSON.parse response.body
   end
 
+  def post_to_api(path, data)
+    uri = URI.parse('http://' + Server.main.hostname + path)
+    req = Net::HTTP::Post.new(uri)
+    req.body = build_nested_query(data)
+    response = Net::HTTP.start(uri.hostname, uri.port)  do |http|
+      http.request req
+    end
+    JSON.parse response.body
+  end
+
+  # Stolen from Rack::Utils, but modified
+  # https://github.com/rack/rack/blob/master/lib/rack/utils.rb#L150
+  def build_nested_query(value, prefix = nil)
+    case value
+    when Array
+      value.map { |v|
+        build_nested_query(v, "#{prefix}[]")
+      }.join("&")
+    when Hash
+      value.map { |k, v|
+        build_nested_query(v, prefix ? "#{prefix}[#{Rack::Utils.escape(k)}]" : Rack::Utils.escape(k))
+      }.join("&")
+    else
+      raise ArgumentError, "value must be a Hash" if prefix.nil?
+      "#{prefix}=#{Rack::Utils.escape(value.to_s)}"
+    end
+  end
 end
 
