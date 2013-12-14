@@ -64,38 +64,38 @@ describe ApisController do
       @board_dimensions = @animal_data['board']
 
       @overlapping_layout = { 
-        :horizontal => @available_pieces.each_with_index.map {|piece, index| [piece, index, 0] }, 
-        :vertical => []
+        :horizontal => @available_pieces.each_with_index.map {|piece, index| [piece, index, 0] }.to_json, 
+        :vertical => [].to_json
       }
 
       @good_layout = { 
-        :horizontal => [], 
-        :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, 0] }
+        :horizontal => [].to_json, 
+        :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, 0] }.to_json
       }
 
       @incorrect_piece_layout = {
-        :horizontal => [], 
-        :vertical => [5,5,4,3,2,1].each_with_index.map {|piece, index| [piece, index, 4] }
+        :horizontal => [].to_json, 
+        :vertical => [5,5,4,3,2,1].each_with_index.map {|piece, index| [piece, index, 4] }.to_json
       }
 
       @above_board_layout = {
-        :horizontal => [], 
-        :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, -1] }
+        :horizontal => [].to_json, 
+        :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, -1] }.to_json
       }
 
       @below_board_layout = {
-        :horizontal => [], 
-        :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, 4] }
+        :horizontal => [].to_json, 
+        :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, 4] }.to_json
       }
 
       @left_of_board_layout = {
-        :horizontal => @available_pieces.each_with_index.map {|piece, index| [piece, -1, index] },
-        :vertical => [], 
+        :horizontal => @available_pieces.each_with_index.map {|piece, index| [piece, -1, index] }.to_json,
+        :vertical => [].to_json
       }
 
       @right_of_board_layout = {
-        :horizontal => @available_pieces.each_with_index.map {|piece, index| [piece, 4, index] },
-        :vertical => []
+        :horizontal => @available_pieces.each_with_index.map {|piece, index| [piece, 4, index] }.to_json,
+        :vertical => [].to_json
       }
     end
 
@@ -191,8 +191,8 @@ describe ApisController do
           @board_dimensions = @animal_data['board']
 
           @bad_layout =  { 
-            :horizontal => [], 
-            :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, 0, index] }
+            :horizontal => [].to_json, 
+            :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, 0, index] }.to_json
           }
 
           post :create, {:animal => @animal, :positions => @bad_layout}
@@ -217,8 +217,8 @@ describe ApisController do
           @board_dimensions = @animal_data['board']
 
           @good_layout =  { 
-            :horizontal => [], 
-            :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, 0] }
+            :horizontal => [].to_json, 
+            :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, index, 0] }.to_json
           }
 
           post :create, {:animal => @animal, :positions => @good_layout}

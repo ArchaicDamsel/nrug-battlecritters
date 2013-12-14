@@ -28,10 +28,10 @@ class GameplaysController < ApplicationController
     @gameplay = Gameplay.current
     @pieces = JSON.parse @gameplay.pieces_json
     positions = {
-      :vertical => @pieces.each_with_index.map {|item, index| [item, index, 0]},
+      :vertical => @pieces.each_with_index.map {|item, index| [item, index, 0]}.to_json,
       :horizontal => []
     }
-    response = put_to_api("/apis/#{@animal.current_role}", :positions => positions)
+    @response = post_to_api("/apis/#{@animal.current_role}", :positions => positions)
     @destination = gameplays_new_path
   end
 
@@ -63,17 +63,23 @@ class GameplaysController < ApplicationController
   end
 
   def put_to_api(path, data)
-    url = URI.parse('http://' + Server.main.hostname + path)
-    req = Net::HTTP::Post.new(url.request_uri)
-    req.set_form_data data
-    output = Net::HTTP.new(url.hostname, url.port).start {|http| http.request(req)}
-    JSON.parse output.body
+    uri = URI.parse('http://' + Server.main.hostname + path)
+    req = Net::HTTP::Put.new(uri)
+    req.body = Rack::Utils.build_nested_query(data)
+    response = Net::HTTP.start(uri.hostname, uri.port)  do |http|
+      http.request req
+    end
   end
 
   def post_to_api(path, data)
     uri = URI.parse('http://' + Server.main.hostname + path)
-    req = Net::HTTP.post_form(uri, data)
-    JSON.parse req.body
+    req = Net::HTTP::Post.new(uri)
+    req.body = Rack::Utils.build_nested_query(data)
+    response = Net::HTTP.start(uri.hostname, uri.port)  do |http|
+      http.request req
+    end
+    JSON.parse response.body
   end
+
 end
 

@@ -43,12 +43,11 @@ class ApisController < ApplicationController
   def create
     @out = {:result => 'Success: You are ready to play!'}
     @animal = Player.find_by_animal(params[:animal])
-
     if @animal.nil?
       @out = { :result => 'No such animal: You need to call the index action first.'}
       @error = true
-    elsif params[:positions].nil? or params[:positions][:horizontal].nil? or params[:positions][:vertical].nil?
-      @out = { :result => 'Missing positions: positions[horizontal] and positions[vertical] must be arrays' }
+    elsif !unparse_position_parameters
+      @out = { :result => 'Missing positions: either positions[horizontal] or positions[vertical] must a string of json representing a 2d array. Recieved ' + params.inspect }
       @error = true
     elsif attempting_to_place_incorrect_pieces?
       @out = { :result => "Incorrect pieces: You were given #{generate_pieces.inspect} and tried to place #{@piece_names}" }
@@ -111,8 +110,21 @@ class ApisController < ApplicationController
     [5,4,3,2,1]
   end
 
+  def unparse_position_parameters
+    return false if params[:positions].nil?
+    return false unless params[:positions][:horizontal].is_a?(String) or params[:positions][:vertical].is_a?(String)
+    params[:positions][:horizontal] = JSON.parse params[:positions][:horizontal] if params[:positions][:horizontal]
+    params[:positions][:vertical] = JSON.parse params[:positions][:vertical] if params[:positions][:vertical]
+    return params[:positions][:horizontal] || params[:positions][:vertical]
+  rescue Exception => e
+    return false
+  end
+
   def attempting_to_place_incorrect_pieces?
-    placed_pieces = params[:positions][:horizontal] + params[:positions][:vertical]
+    params[:positions][:horizontal] ||= []
+    params[:positions][:vertical] ||= []
+
+    placed_pieces = params[:positions][:horizontal]  + params[:positions][:vertical]
 
     @piece_names = placed_pieces.map(&:first).map(&:to_i)
 
