@@ -3,10 +3,11 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_filter :find_or_create_uuid, :decide_team
+  before_filter :find_or_create_uuid_and_decide_team
 
-  def find_or_create_uuid
+  def find_or_create_uuid_and_decide_team
     @uuid = params[:uuid] || generate_uuid
+    decide_team
   end
 
   def generate_uuid
@@ -14,7 +15,7 @@ class ApplicationController < ActionController::Base
   end
 
   def decide_team
-    server = Server.find_by(:hostname, @uuid) 
-    @my_team = server ? server.current_role : 'Unknown'
+    @animal = Player.current_animal @uuid
+    @my_team = @animal ? @animal.current_role : 'Unknown'
   end
 end

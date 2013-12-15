@@ -37,6 +37,10 @@ class Board < ActiveRecord::Base
     self.representation = rep
   end
 
+  def count_cells_containing(item)
+    representation.values.select {|v| v == item}.count
+  end
+
   def unharmed_critters
     self.representation.values.select { |item| item !=~ /hit/ && item !=~ /miss/}
   end

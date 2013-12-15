@@ -3,8 +3,6 @@ require 'uri'
 
 class GameplaysController < ApplicationController
 
-  before_filter :get_my_animal
-
   # TODO: Welcome to the fat controller. Can we push complexity to the models?
   def index
     @response = get_from_api("/apis")
@@ -58,10 +56,6 @@ class GameplaysController < ApplicationController
   end
 
   private
-
-  def get_my_animal
-    @animal = Player.current_animal @uuid
-  end
 
   def index_url
     gameplays_index_path :uuid => @uuid

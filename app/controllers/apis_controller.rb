@@ -89,9 +89,18 @@ class ApisController < ApplicationController
           board.fill_cell x, y, @animal.missile_string
           @out = {:result => 'miss'}
         elsif cell[@animal.opponent.current_role] # match substring in case we've hit this cell before
-          board.fill_cell x, y, @animal.opponent.killed_string
-          @out = {:result => 'hit'}
+          opponent_kill_string = @animal.opponent.killed_string
+          board.fill_cell x, y, opponent_kill_string
+          killed_enemies = board.count_cells_containing(opponent_kill_string)
+          if killed_enemies == possible_kills_per_player
+            @animal.update_attribute :winner, true
+            @animal.opponent.update_attribute :loser, true
+            @out = {:result => 'win'}
+          else 
+            @out = {:result => 'hit', :killed_enemies => killed_enemies}
+          end
         end
+        board.save
       end
     else
       @out = {:result => @animal.won? ? "win" : "lose"}
@@ -111,6 +120,10 @@ class ApisController < ApplicationController
 
   def generate_pieces
     [5,4,3,2,1]
+  end
+
+  def possible_kills_per_player
+    generate_pieces.inject(0) { |acc, piece| acc + piece }
   end
 
   def generate_board
