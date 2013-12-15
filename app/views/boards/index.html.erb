@@ -1,0 +1,14 @@
+<div class="welcome">
+	<h3>My hostname is:</h3>
+	<h1><%= request.host %><%= request.port == 80 ? '' : ":#{request.port}" %></h1>
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var refresh = function() {
+			window.location = window.location;
+		}
+		setTimeout(refresh, 500);
+	});
+</script>

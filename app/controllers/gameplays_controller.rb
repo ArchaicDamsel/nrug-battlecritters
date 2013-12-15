@@ -9,6 +9,7 @@ class GameplaysController < ApplicationController
     gameplay = Gameplay.new
 
     if @response['result']  # you lose or game cannot be started
+      check_for_winner @response
       gameplay.result = @response['result']
       @destination = finish_url
     else
@@ -44,7 +45,8 @@ class GameplaysController < ApplicationController
     @shot = [rand(width), rand(height)]
     @present_shot = put_to_api("/apis/#{@animal.current_role}", :shot => @shot)
 
-    if @present_shot['result'] == 'win' || @present_shot['result'] == 'lose'
+    if @present_shot['winner']
+      check_for_winner @present_shot
       @destination = finish_url
     else
       @destination = edit_url
@@ -52,7 +54,7 @@ class GameplaysController < ApplicationController
   end
 
   def finish
-
+    @winner = Player.winner
   end
 
   private
@@ -71,6 +73,14 @@ class GameplaysController < ApplicationController
 
   def finish_url
     gameplays_finish_path :uuid => @uuid
+  end
+
+  def check_for_winner(response)
+    if response['winner']
+      winner = Player.find_by_animal response['winner']
+      winner.update_attribute :winner, true
+      winner.opponent.update_attribute :loser, true
+    end
   end
 
   def connect_to_api(path)

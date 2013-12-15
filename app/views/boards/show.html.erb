@@ -1,21 +1,25 @@
-<table class="board" id="fox_board">
-	<%(0..7).each do |row_number|%>
-		<tr>
-		<%(0..7).each do |column_number|%>
-			<td><%= ['', image_tag('board_fox.png'), image_tag('board_fox_hit.png'), image_tag('board_badger_missile.png')].sample %></td>
+<% [@fox_board, @badger_board].each do |board| %>
+	<table class="board" id="<%= board.server.current_role %>_board">
+		<%(0..board.height - 1).each do |row_number|%>
+			<tr>
+			<%(0..board.width - 1).each do |column_number|%> 
+				<% contents = board.get_cell(column_number, row_number) %>
+				<td><%= image_tag "board_#{contents}.png" unless contents.nil? %></td>
+			<% end %>
+			</tr>
 		<% end %>
-		</tr>
-	<% end %>
+	</table>
+<% end %>
 
-</table>
 
-<table class="board" id="badger_board">
-	<%(0..7).each do |row_number|%>
-		<tr>
-		<%(0..7).each do |column_number|%>
-			<td><%= ['', image_tag('board_badger.png'), image_tag('board_badger_hit.png'), image_tag('board_fox_missile.png')].sample %></td>
-		<% end %>
-		</tr>
-	<% end %>
 
-</table>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var refresh = function() {
+			window.location = window.location;
+		}
+		setTimeout(refresh, 500);
+	});
+</script>

@@ -1,26 +1,21 @@
 <div class="welcome">
-	<% if @role == 'server' %>
-		<h3>My hostname is:</h3>
-		<h1><%= request.host %><%= request.port == 80 ? '' : ":#{request.port}" %></h1>
-	<% else %>
-		<h3>Where is the server?</h3>
-		<p>(look at the big screen!)</p>
-		<%= form_for :server, :url => welcome_path(:uuid => @uuid) do |f| %>
-			<% unless @other_servers.count == 0 %>
-			<fieldset>
-				<label>Recent hosts: </label>
-				<% @other_servers.each do |server| %>
-					<div>
-						<%= link_to server.hostname, '#', :onclick => "set_field('server_hostname', '#{server.hostname}'); return false;" %>
-					</div>
-				<% end %>
-			</fieldset>
+	<h3>Where is the server?</h3>
+	<p>(look at the big screen!)</p>
+	<%= form_for :server, :url => welcome_path(:uuid => @uuid) do |f| %>
+		<% unless @other_servers.count == 0 %>
+		<fieldset>
+			<label>Recent hosts: </label>
+			<% @other_servers.each do |server| %>
+				<div>
+					<%= link_to server.hostname, '#', :onclick => "set_field('server_hostname', '#{server.hostname}'); return false;" %>
+				</div>
 			<% end %>
-				<%=	f.label :hostname %>
-				<%=	f.text_field :hostname %>
-			</fieldset>
-			<%= f.submit "FIIIIIIGHT!" %>
-
+		</fieldset>
 		<% end %>
+			<%=	f.label :hostname %>
+			<%=	f.text_field :hostname %>
+		</fieldset>
+		<%= f.submit "FIIIIIIGHT!" %>
+
 	<% end %>
 </div>

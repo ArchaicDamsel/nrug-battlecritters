@@ -10,8 +10,11 @@ class WelcomesController < ApplicationController
   # Servers: wait for connections
   def new
     setup_current_server
-
-    @other_servers = Server.where.not("hostname LIKE ?", "UUID%")
+    if @role == 'server'
+      redirect_to boards_index_url
+    else
+      @other_servers = Server.where.not("hostname LIKE ?", "UUID%")
+    end
   end
 
   # I'm a player; I have entered the server hostname

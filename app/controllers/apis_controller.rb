@@ -21,23 +21,23 @@ class ApisController < ApplicationController
     end
   end
 
-  def show
-    if !Player.fox || !Player.badger
-      @out = {:waiting_for => "other players"}
-    else
-      fox, badger = Player.fox, Player.badger
-      if !fox.board || !badger.board
-        @out = {:waiting_for => "initial positions"}
-      elsif Player.game_over?
-        if fox.loser? && badger.loser?
-          @out = {:waiting_for => "next game", :result => "Both teams lost"}
-        else
-          @out = {:waiting_for => "next game", :result => "#{Player.winner.current_role} won"}
-        end
-      end
-    end
-    render :text => @out.to_json
-  end
+  # def show
+  #   if !Player.fox || !Player.badger
+  #     @out = {:waiting_for => "other players"}
+  #   else
+  #     fox, badger = Player.fox, Player.badger
+  #     if !fox.board || !badger.board
+  #       @out = {:waiting_for => "initial positions"}
+  #     elsif Player.game_over?
+  #       if fox.loser? && badger.loser?
+  #         @out = {:waiting_for => "next game", :result => "Both teams lost"}
+  #       else
+  #         @out = {:waiting_for => "next game", :result => "#{Player.winner.current_role} won"}
+  #       end
+  #     end
+  #   end
+  #   render :text => @out.to_json
+  # end
 
   def create
     @out = {:result => 'Success: You are ready to play!'}
@@ -65,6 +65,7 @@ class ApisController < ApplicationController
     if @error
       @animal.update_attribute :loser, true if @animal
       @animal.opponent.update_attribute :winner, true if @animal && @animal.opponent
+      @out[:winner] = Player.winner.current_role
       render :text => @out.to_json, :status => 500
     else
       render :text => @out.to_json
@@ -80,7 +81,7 @@ class ApisController < ApplicationController
         @out = { :result => 'No such animal: You need to call the index and create actions first.'}
         @error = true
       elsif Player.game_over?
-        @out = {:result => @animal.won? ? "win" : "lose"}
+        @out = {:result => @animal.won? ? "win" : "lose", :winner => Player.winner.current_role}
         @error = true
       else
         board = @animal.opponent.board
@@ -95,7 +96,7 @@ class ApisController < ApplicationController
           if killed_enemies == possible_kills_per_player
             @animal.update_attribute :winner, true
             @animal.opponent.update_attribute :loser, true
-            @out = {:result => 'win'}
+            @out = {:result => 'win', :winner => Player.winner.current_role}
           else 
             @out = {:result => 'hit', :killed_enemies => killed_enemies}
           end
@@ -103,7 +104,7 @@ class ApisController < ApplicationController
         board.save
       end
     else
-      @out = {:result => @animal.won? ? "win" : "lose"}
+      @out = {:result => @animal.won? ? "win" : "lose", :winner => Player.winner.current_role}
     end
 
     if @error

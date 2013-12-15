@@ -3,7 +3,9 @@ Nrug::Application.routes.draw do
   get "gameplays/new"
   get "gameplays/edit"
   get "gameplays/finish"
-  get "board/show"
+
+  get "boards/index"
+  get "boards/show"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
