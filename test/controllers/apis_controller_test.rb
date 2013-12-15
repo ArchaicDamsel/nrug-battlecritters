@@ -41,23 +41,6 @@ describe ApisController do
     end
   end
 
-  context "Waiting for players" do
-    it "should indicate that players have not connected" do
-      get :index, :uuid => 'abcd'
-      get :show, :animal => "fox", :uuid => 'abcd'
-      expect { JSON.parse(response.body)['waiting_for'] == 'other players'}
-    end
-
-    it "should indicate players are ready to position pieces" do
-      get :index, :uuid => 'abcd'
-      get :index, :uuid => 'efgh'
-      get :show, :animal => "fox", :uuid => 'abcd'
-    
-      expect { JSON.parse(response.body)['waiting_for'] == "initial positions"}
-    end
-
-  end
-
   context "laying out my board" do
     before do 
       get :index, :uuid => 'abcd'
@@ -158,52 +141,11 @@ describe ApisController do
         expect { JSON.parse(response.body)["result"] =~ /out of bounds/i }
       end
     end
-
-    it "should declare both players losers if they both give invalid boards" do
-      # Player 1 loses
-      post :create, :animal => :fox, :positions => @right_of_board_layout
-      expect { JSON.parse(response.body)["result"] =~ /out of bounds/i }
-      
-      # The badger is also playing, and loses
-      @request.env['REMOTE_ADDR'] = '1.2.3.4'
-      get :index , :uuid => 'abcd'
-      post :create, :animal => :badger, :positions => @overlapping_layout
-      expect { JSON.parse(response.body)["result"] =~ /overlap/i }
-
-      get :show, :animal => :badger, :uuid => 'abcd'
-      expect { JSON.parse(response.body)["result"] =~ /both teams lost/i }
-    end
   end
 
 
 
   context "shooting woodland creatures" do
-
-    context "with bad setup" do
-      before do
-        ['abcd', 'efgh'].each do |uuid|
-          get :index, :uuid => uuid
-          @animal_data = JSON.parse response.body
-          @animal = @animal_data['animal']
-          @available_pieces = @animal_data['pieces']
-          @board_dimensions = @animal_data['board']
-
-          @bad_layout =  { 
-            :horizontal => [].to_json, 
-            :vertical => @available_pieces.each_with_index.map {|piece, index| [piece, 0, index] }.to_json
-          }
-
-          post :create, :animal => @animal, :positions => @bad_layout, :uuid => uuid
-        end
-      end
-
-      it "should refuse to shoot" do
-        put :update, {:animal => @animal, :shot => [0,0]}
-        expect { response.status == 500 }
-        expect { JSON.parse(response.body)["result"] =~ /(win|lose)/i }
-      end
-    end
-
     context "with good setup" do
       before do
         ['abcd', 'efgh'].each do |uuid|
