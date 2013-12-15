@@ -1,6 +1,14 @@
 // Place all the styles related to the Board controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.winner_notification {
+	position: absolute;
+	left: 50%;
+	top: 150px;
+	margin-left: -200px;
+	z-index: 10;
+}
+
 .boards_controller {
 	table.board {
 		width: 300px;
@@ -29,6 +37,20 @@
 		text-align: center;
 	}
 
+	.cell_padding {
+		min-width: 100%;
+		min-height: 200%;
+		vertical-align: middle;
+		text-align: center;
+		padding: 0;
+		margin: 0;
+	}
+
+	.cell_padding img {
+		margin: 0;
+		padding: 0;
+		margin-bottom: -5px;
+	}
 	.fox { 
 		width: 200px;
 	}

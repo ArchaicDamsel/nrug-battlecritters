@@ -1,1 +1,3 @@
-<h1><%= @winner.current_role %> won!</h1>
+<% if @winner %>
+	<%= image_tag "#{@winner.current_role}wins.png", :class => "winner_notification" %>
+<% end %> 

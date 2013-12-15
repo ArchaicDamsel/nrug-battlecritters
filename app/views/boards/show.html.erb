@@ -1,25 +1,36 @@
-<% [@fox_board, @badger_board].each do |board| %>
+<% [@fox_board, @badger_board].compact.each do |board| %>
 	<table class="board" id="<%= board.server.current_role %>_board">
 		<%(0..board.height - 1).each do |row_number|%>
 			<tr>
 			<%(0..board.width - 1).each do |column_number|%> 
 				<% contents = board.get_cell(column_number, row_number) %>
-				<td><%= image_tag "board_#{contents}.png" unless contents.nil? %></td>
+				<td> 
+					<div class="cell_padding">
+						<% if contents.nil? %>
+							<%= image_tag "board_empty.png"%>
+						<%else %>
+							<%= image_tag "board_#{contents}.png" %>
+						<% end %>
+					</div> 
+				</td>
 			<% end %>
 			</tr>
 		<% end %>
 	</table>
 <% end %>
 
+<% if @winner %>
+	<%= image_tag "#{@winner.current_role}wins.png", :class => "winner_notification" %>
+<% end %> 
 
 
 
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		var refresh = function() {
-			window.location = window.location;
-		}
-		setTimeout(refresh, 500);
-	});
-</script>
+// 	$(document).ready(function() {
+// 		var refresh = function() {
+// 			window.location = window.location;
+// 		}
+// 		setTimeout(refresh, 500);
+// 	});
+// </script>

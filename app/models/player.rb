@@ -15,7 +15,7 @@ class Player
     end
 
     def winner
-      Server.find_by_winner(true) || Server.find_by_loser(true).opponent
+      Server.find_by_winner(true) || (Server.find_by_loser(true) && Server.find_by_loser(true).opponent)
     end
 
     def fox
