@@ -9,6 +9,11 @@
 	z-index: 10;
 }
 
+.crosshairs {
+		position: absolute;
+		z-index: 9;
+	}
+
 .boards_controller {
 	table.board {
 		width: 300px;
@@ -50,6 +55,7 @@
 		margin: 0;
 		padding: 0;
 		margin-bottom: -5px;
+
 	}
 	.fox { 
 		width: 200px;
@@ -90,6 +96,48 @@
 		#badger_board {
 			float: left;
 			margin-left: 200px;
+		}
+	}
+}
+
+@media all and (min-width: 1000px){
+	.boards_controller {
+		table.board {
+		width: 45%;
+		height: 45%;
+		}
+
+		table.board img {
+			width: 100%;
+		}
+
+		table.board img.crosshairs {
+			width: 5%;
+		}
+
+		#fox_board {
+			float: right;
+			margin-right: 4%;
+		}
+
+		#badger_board {
+			float: left;
+			margin-left: 4%;
+		}
+
+		.fox { 
+			width: 10%;
+			z-index: 10;
+		}
+
+		.badger {
+			width: 10%;
+			z-index: 10;
+		}
+
+		.moon {
+			width: 7%;
+			z-index: -1;
 		}
 	}
 }

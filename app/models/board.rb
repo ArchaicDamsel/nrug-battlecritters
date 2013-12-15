@@ -9,6 +9,18 @@ class Board < ActiveRecord::Base
     {}
   end
 
+  def recent_shots
+    JSON.parse recent_shots_json
+  rescue
+    []
+  end
+
+  def register_shot(x,y)
+    shots = recent_shots
+    shots.unshift([x,y])
+    self.recent_shots_json = shots.to_json
+  end
+
   def representation=(rep)
     self.json_representation = rep.to_json
   end

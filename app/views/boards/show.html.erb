@@ -6,6 +6,9 @@
 				<% contents = board.get_cell(column_number, row_number) %>
 				<td> 
 					<div class="cell_padding">
+						<% if board.recent_shots[0] == [column_number, row_number] %>
+							<%= image_tag 'crosshairs.png', :class => "crosshairs" %>
+						<% end %>
 						<% if contents.nil? %>
 							<%= image_tag "board_empty.png"%>
 						<%else %>

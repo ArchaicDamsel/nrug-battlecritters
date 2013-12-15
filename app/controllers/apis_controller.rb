@@ -86,8 +86,9 @@ class ApisController < ApplicationController
       else
         board = @animal.opponent.board
         cell = board.get_cell x, y
+        board.register_shot(x,y)
         if cell.nil? || cell == @animal.missile_string
-          board.fill_cell x, y, @animal.missile_string
+          board.fill_cell x, y, @animal.missile_string 
           @out = {:result => 'miss'}
         elsif cell[@animal.opponent.current_role] # match substring in case we've hit this cell before
           opponent_kill_string = @animal.opponent.killed_string
