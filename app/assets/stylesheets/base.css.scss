@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 body {
-	background-image: url("background.png");
+	background-image: image-url("background.png");
 	background-size: 100% auto;
 	background-color: #00002b;
 	background-position: 0 0;
@@ -39,7 +39,7 @@ header {
 	height: 100px;
 	top: 200px;
 	left: 0;
-	background-image: url("battlecritters.png");
+	background-image: image-url("battlecritters.png");
 	background-repeat: no-repeat;
 	background-position: center;
 }
@@ -69,7 +69,7 @@ nav {
 }
 
 .grass {
-	background-image: url("grass.png");
+	background-image: image-url("grass.png");
 	background-repeat: repeat-x;
 	background-position: bottom;
 	z-index: 1;
