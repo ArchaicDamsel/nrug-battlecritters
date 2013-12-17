@@ -24,7 +24,7 @@
 
 <% if @winner %>
 	<%= image_tag "#{@winner.current_role}wins.png", :class => "winner_notification" %>
-	<%= link_to "Start again", new_welcome_path(:server => {:current_role => :server }) %>
+	<p class='timer'> Restarting in <%= @timer %> 
 <% end %> 
 
 
@@ -33,7 +33,11 @@
 <script type="text/javascript">
  	$(document).ready(function() {
  		var refresh = function() {
+		<% if @timer.nil? || @timer > 0 %> 
  			window.location = window.location;
+	 	<% else %>
+ 			window.location = "<%= new_welcome_path(:server => {:current_role => :server }) %>";
+	 	<% end %>
  		}
  		setTimeout(refresh, 500);
  	});

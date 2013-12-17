@@ -9,6 +9,17 @@
 	z-index: 10;
 }
 
+.timer {
+	position: absolute;
+	display: inline-block;
+	font-size: 1.5em;
+	top: 20px;
+	background-color: #EEF;
+	color: black;
+	margin-left: -100px;
+	left: 50%;
+}
+
 .crosshairs {
 		position: absolute;
 		z-index: 9;

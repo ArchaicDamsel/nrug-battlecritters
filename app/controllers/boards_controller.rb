@@ -7,5 +7,10 @@ class BoardsController < ApplicationController
     @badger_board = Player.badger.board
     @fox_board = Player.fox.board
     @winner = Player.winner
+
+    if @winner
+      @timer = 20
+      @timer = params[:timer].to_i - 1 if params[:timer]
+    end
   end
 end
