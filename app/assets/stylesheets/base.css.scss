@@ -103,3 +103,33 @@ h1, h2, h3, h4, p {
 .restart_button:hover {
 	border: 6px solid yellow;
 }
+
+@media all and (max-width: 1200px) {
+	.badger {
+		width: 30%;
+	}
+
+	.fox {
+		width: 30%;
+	}
+}
+
+@media all and (max-width: 1000px) {
+
+	.moon {
+		width: 20%;
+	}
+
+	.badger {
+		width: 30%;
+	}
+
+	.fox {
+		width: 30%;
+	}
+
+	header {
+		top: 125px;
+	}
+
+}
