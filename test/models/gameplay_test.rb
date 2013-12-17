@@ -1,7 +1,12 @@
 require 'test_helper'
 
-class GameplayTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+describe Gameplay do
+  context "Class methods" do
+    before do
+    end
+
+    it "should fetch a gameplay" do
+      assert { Gameplay.current.class == Gameplay }
+    end
+  end
 end
