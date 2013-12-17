@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+firefox localhost:3000 localhost:3000 localhost:4000 &
+
+rails server >> log/all_logs.log &
+rails server --port=4000 --pid=tmp/second_server.pid >> log/all_logs.log 
+
+
+
