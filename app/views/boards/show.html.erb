@@ -34,7 +34,7 @@
  	$(document).ready(function() {
  		var refresh = function() {
 		<% if @timer.nil? || @timer > 0 %> 
- 			window.location = window.location;
+ 			window.location = "<%= boards_show_path(:timer => @timer) %>";
 	 	<% else %>
  			window.location = "<%= new_welcome_path(:server => {:current_role => :server }) %>";
 	 	<% end %>
