@@ -33,6 +33,7 @@ class GameplaysController < ApplicationController
   # new: set up your board
   def new
     @gameplay = Gameplay.current
+    Shots.delete_all
     @pieces = JSON.parse @gameplay.pieces_json
 
     positions = {
@@ -46,8 +47,15 @@ class GameplaysController < ApplicationController
 
   # edit: shoot the opponent
   def edit
-    @gameplay = Gameplay.current    
-    @shot = [rand(@gameplay.board_width), rand(@gameplay.board_height)]
+    @gameplay = Gameplay.current  
+    
+    @shots = Shot.all  
+
+    if @shots.empty?
+      @shot = [rand(@gameplay.board_width), rand(@gameplay.board_height)]
+    else
+
+    end
     @present_shot = put_to_api("/apis/#{@animal.current_role}", :shot => @shot)
 
     if @present_shot['winner']

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131215181759) do
+ActiveRecord::Schema.define(version: 20131217201641) do
 
   create_table "boards", force: true do |t|
     t.integer  "server_id"
@@ -54,6 +54,13 @@ ActiveRecord::Schema.define(version: 20131215181759) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "loser"
+  end
+
+  create_table "shots", force: true do |t|
+    t.integer "player_id"
+    t.integer "x"
+    t.integer "y"
+    t.boolean "hit"
   end
 
 end

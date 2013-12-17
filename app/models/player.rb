@@ -2,6 +2,20 @@
 # Players are really just servers. Shhhh, don't tell anyone...
 class Player
   class << self
+
+    def valid_shot?(coords)
+      shots = Shots.where({x: coords[:x], y:coords[:y]})
+      shots.empty?
+    end
+
+    def valid_shots
+      shots = Shots.all.collect do |s|
+        [s.y, s.y]
+      end
+
+      (0..7).to_a.repeated_permutations(2).to_a - shots
+    end
+
     def find_by_animal(animal)
       Server.find_by_current_role animal
     end
