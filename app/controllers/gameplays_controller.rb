@@ -36,8 +36,15 @@ class GameplaysController < ApplicationController
     @pieces = JSON.parse @gameplay.pieces_json
 
     positions = {
-      :vertical => @pieces.each_with_index.map {|item, index| [item, index, 0]}.to_json,
-      :horizontal => []
+      :vertical => [
+        [2,3,1],
+        [4,7,2],
+      ].to_json,
+      :horizontal => [
+        [1,5,1],
+        [3,3,4],
+        [5,1,6],
+      ].to_json,
     }
 
     @response = post_to_api("/apis/#{@animal.current_role}", :positions => positions)
@@ -64,4 +71,3 @@ class GameplaysController < ApplicationController
   end
 
 end
-
