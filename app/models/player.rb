@@ -4,12 +4,12 @@ class Player
   class << self
 
     def valid_shot?(coords)
-      shots = Shots.where({x: coords[:x], y:coords[:y]})
+      shots = Shot.where({x: coords[:x], y:coords[:y]})
       shots.empty?
     end
 
     def valid_shots
-      shots = Shots.all.collect do |s|
+      shots = Shot.all.collect do |s|
         [s.y, s.y]
       end
 

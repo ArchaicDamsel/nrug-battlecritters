@@ -33,7 +33,7 @@ class GameplaysController < ApplicationController
   # new: set up your board
   def new
     @gameplay = Gameplay.current
-    Shots.delete_all
+    Shot.delete_all
     @pieces = JSON.parse @gameplay.pieces_json
 
     positions = {
