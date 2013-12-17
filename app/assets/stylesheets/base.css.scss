@@ -85,3 +85,21 @@ h1, h2, h3, h4, p {
 	font-variant: small-caps;
 	
 }
+
+.restart_button {
+	position: absolute;
+	color: #3b4664;
+	text-decoration: none;
+	background-color: #cfdde9;
+	padding: 20px;
+	border-radius: 5px;
+	border: 6px solid #3b4664;
+	top: 5%;
+	width: 100px;
+	left: 44.5%;
+	text-align: center;
+	z-index: 12;
+}
+.restart_button:hover {
+	border: 6px solid yellow;
+}

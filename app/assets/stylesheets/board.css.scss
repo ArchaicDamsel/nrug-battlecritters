@@ -4,7 +4,7 @@
 .winner_notification {
 	position: absolute;
 	left: 50%;
-	top: 150px;
+	top: 120px;
 	margin-left: -200px;
 	z-index: 10;
 }
@@ -100,7 +100,7 @@
 	}
 }
 
-@media all and (min-width: 1000px){
+
 	.boards_controller {
 		table.board {
 		width: 45%;
@@ -139,5 +139,16 @@
 			width: 7%;
 			z-index: -1;
 		}
+	}
+
+	@media all and (max-width: 700px){
+
+		.winner_notification {
+		position: absolute;
+		left: 50%;
+		top: 50px;
+		margin-left: -170px;
+		z-index: 10;
+		width: 60%;
 	}
 }
