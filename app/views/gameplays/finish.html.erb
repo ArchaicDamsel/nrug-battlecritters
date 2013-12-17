@@ -1,3 +1,5 @@
 <% if @winner %>
 	<%= image_tag "#{@winner.current_role}wins.png", :class => "winner_notification" %>
+
+	<%= link_to "Start again", new_welcome_path(:server => {:current_role => :player }) %>
 <% end %> 

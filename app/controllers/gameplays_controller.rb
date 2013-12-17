@@ -4,6 +4,7 @@ require 'uri'
 class GameplaysController < ApplicationController
 
   # TODO: Welcome to the fat controller. Can we push complexity to the models?
+  # index: Announce your intention to fight.
   def index
     @response = get_from_api("/apis")
     gameplay = Gameplay.new
@@ -28,6 +29,7 @@ class GameplaysController < ApplicationController
     gameplay.save
   end
 
+  # new: set up your board
   def new
     @gameplay = Gameplay.current
     @pieces = JSON.parse @gameplay.pieces_json
@@ -39,6 +41,7 @@ class GameplaysController < ApplicationController
     @destination = edit_url
   end
 
+  # edit: shoot the opponent
   def edit
     @gameplay = Gameplay.current    
     width, height = @gameplay.board_width, @gameplay.board_height
@@ -53,6 +56,7 @@ class GameplaysController < ApplicationController
     end
   end
 
+  # finish: pretty self-explainatory.
   def finish
     @winner = Player.winner
   end

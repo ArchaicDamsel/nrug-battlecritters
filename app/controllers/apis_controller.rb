@@ -21,24 +21,6 @@ class ApisController < ApplicationController
     end
   end
 
-  # def show
-  #   if !Player.fox || !Player.badger
-  #     @out = {:waiting_for => "other players"}
-  #   else
-  #     fox, badger = Player.fox, Player.badger
-  #     if !fox.board || !badger.board
-  #       @out = {:waiting_for => "initial positions"}
-  #     elsif Player.game_over?
-  #       if fox.loser? && badger.loser?
-  #         @out = {:waiting_for => "next game", :result => "Both teams lost"}
-  #       else
-  #         @out = {:waiting_for => "next game", :result => "#{Player.winner.current_role} won"}
-  #       end
-  #     end
-  #   end
-  #   render :text => @out.to_json
-  # end
-
   def create
     @out = {:result => 'Success: You are ready to play!'}
     @animal = Player.find_by_animal(params[:animal])
@@ -83,6 +65,8 @@ class ApisController < ApplicationController
       elsif Player.game_over?
         @out = {:result => @animal.won? ? "win" : "lose", :winner => Player.winner.current_role}
         @error = true
+      elsif !@animal.opponent or !@animal.opponent.board
+        @out = {:result => 'AWOL', :message => "The opponent has not set up their board yet. Try again in a second."}
       else
         board = @animal.opponent.board
         cell = board.get_cell x, y
