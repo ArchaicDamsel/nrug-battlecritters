@@ -1,24 +1,26 @@
 require 'test_helper'
 
-class GameplaysControllerTest < ActionController::TestCase
-  # test "should get index" do
-  #   get :index
-  #   assert_response :success
-  # end
+describe GameplaysController do
+  context "Starting the game" do
+    before do
+      Server.create! :hostname => 'zzzz', :current_role => 'server'
+      Server.create! :hostname => 'abcd', :current_role => 'fox'
+      Server.create! :hostname => 'efgh', :current_role => 'badger'
 
-  # test "should get new" do
-  #   get :new
-  #   assert_response :success
-  # end
+    end
 
-  # test "should get edit" do
-  #   get :edit
-  #   assert_response :success
-  # end
+    it "should successfully shoot" do
+      skip
+      stub_shot_with 0,0
+      get :edit, :uuid => 'abcd'
+      expect { response.status == 200 }
+    end
+  end
 
-  # test "should get finish" do
-  #   get :finish
-  #   assert_response :success
-  # end
-
+  def stub_shot_with(x, y)
+      stub_request(:put, "http://zzzz/apis/fox?uuid=abcd").
+  with(:body => "shot[]=#{x}&shot[]=#{y}",
+       :headers => {'Host'=>'zzzz', 'User-Agent'=>'Ruby'}).
+  to_return(:status => 200, :body => "", :headers => {})
+  end
 end
