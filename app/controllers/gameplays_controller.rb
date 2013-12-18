@@ -35,9 +35,16 @@ class GameplaysController < ApplicationController
     @gameplay = Gameplay.current
     @pieces = JSON.parse @gameplay.pieces_json
 
+    vertical, horizontal = [], []
+
+    @pieces.each_with_index do |piece, index|
+      vertical << [piece, index, index] if index % 2 == 0
+      horizontal << [piece, index, @gameplay.board_height - index] if index % 2 != 0
+    end
+
     positions = {
-      :vertical => @pieces.each_with_index.map {|item, index| [item, index, 0]}.to_json,
-      :horizontal => []
+      :vertical => vertical.to_json,
+      :horizontal => horizontal.to_json
     }
 
     @response = post_to_api("/apis/#{@animal.current_role}", :positions => positions)
@@ -46,8 +53,15 @@ class GameplaysController < ApplicationController
 
   # edit: shoot the opponent
   def edit
-    @gameplay = Gameplay.current    
-    @shot = [rand(@gameplay.board_width), rand(@gameplay.board_height)]
+    @gameplay = Gameplay.current
+    combos = -> { (0..7).to_a.repeated_permutation(2).to_a.shuffle.to_json }
+    @gameplay.shots_json ||= combos[]
+    @shots = JSON.parse @gameplay.shots_json
+    @shot = @shots.pop
+
+    @gameplay.shots_json = @shots.empty? ? combos[] : @shots.to_json
+    @gameplay.save!
+
     @present_shot = put_to_api("/apis/#{@animal.current_role}", :shot => @shot)
 
     if @present_shot['winner']

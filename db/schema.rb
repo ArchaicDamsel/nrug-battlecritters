@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131215181759) do
+ActiveRecord::Schema.define(version: 20131218011317) do
 
   create_table "boards", force: true do |t|
     t.integer  "server_id"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20131215181759) do
     t.string   "result"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "shots_json"
   end
 
   create_table "messages", force: true do |t|
